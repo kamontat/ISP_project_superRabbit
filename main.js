@@ -52,6 +52,9 @@
  *
  */
 
+ var screenWidth = 800; // x axis
+ var screenHeight = 600; // y axis
+
 cc.game.onStart = function() {
   if (!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it
     document.body.removeChild(document.getElementById("cocosLoading"));
@@ -61,7 +64,7 @@ cc.game.onStart = function() {
   // Adjust viewport meta
   cc.view.adjustViewPort(true);
   // Setup the resolution policy and design resolution size
-  cc.view.setDesignResolutionSize(800, 600, cc.ResolutionPolicy.SHOW_ALL);
+  cc.view.setDesignResolutionSize(screenWidth, screenHeight, cc.ResolutionPolicy.SHOW_ALL);
   // Instead of set design resolution, you can also set the real pixel resolution size
   // Uncomment the following line and delete the previous line.
   // cc.view.setRealPixelResolution(960, 640, cc.ResolutionPolicy.SHOW_ALL);
