@@ -10,9 +10,7 @@ var GameLayer = cc.LayerColor.extend({
     this.addChild(this.player);
 
     // add player in the child
-    this.pillarPair = new PillarPair();
-    this.pillarPair.setPosition(new cc.Point(700, 300));
-    this.addChild(this.pillarPair);
+    this.pillarPair = null;
 
     // report position
     this.positionLabel = cc.LabelTTF.create("", 'Arial', 40);
@@ -31,9 +29,6 @@ var GameLayer = cc.LayerColor.extend({
       event: cc.EventListener.KEYBOARD,
       onKeyPressed: function(keyCode, event) {
         self.onKeyDown(keyCode, event);
-      },
-      onKeyReleased: function(keyCode, event) {
-        self.onKeyUp(keyCode, event);
       }
     }, this);
   },
@@ -42,21 +37,30 @@ var GameLayer = cc.LayerColor.extend({
     if (this.state == GameLayer.STATES.FRONT) {
       this.state = GameLayer.STATES.STARTED;
       this.player.start();
+      this.createPillarPair();
     }
     if (this.state == GameLayer.STATES.STARTED) {
       this.player.jump();
     }
   },
 
-  onKeyUp: function(keyCode, event) {},
+  createPillarPair: function() {
+    this.pillarPair = new PillarPair();
+    this.pillarPair.setPosition(new cc.Point(900, 300));
+    this.addChild(this.pillarPair);
+    this.pillarPair.scheduleUpdate();
+  },
+
   update: function() {
     var pos = this.player.getPosition()
     if (pos.y < 0 || pos.y > screenHeight) {
       this.player.unscheduleUpdate();
+      this.pillarPair.unscheduleUpdate();
       this.unscheduleUpdate();
     }
     if (pos.x < 0 || pos.x > screenWidth) {
       this.player.unscheduleUpdate();
+      this.pillarPair.unscheduleUpdate();
       this.unscheduleUpdate();
     }
     console.log(pos);
