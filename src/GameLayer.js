@@ -17,12 +17,51 @@ var GameLayer = cc.LayerColor.extend({
     this.addChild(this.pillarPair1);
     this.addChild(this.pillarPair2);
 
+    this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
+    this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
+    this.addChild(this.scoreLabel);
+
     this.addKeyboardHandlers();
     this.scheduleUpdate();
     this.player.scheduleUpdate();
 
     return true;
   },
+
+  update: function() {
+    // update score when player pass pillar
+    this.player.updateScore(this.pillarPair1);
+    this.player.updateScore(this.pillarPair2);
+    this.scoreLabel.setString("score: " + this.player.score);
+
+    if (this.state == GameLayer.STATES.STARTED) {
+      if (this.pillarPair1 && this.pillarPair1.hit(this.player)) {
+        console.warn("You Loss");
+        this.endGame();
+        this.state = GameLayer.STATES.DEAD;
+      }
+
+      if (this.pillarPair2 && this.pillarPair2.hit(this.player)) {
+        console.warn("You Loss");
+        this.endGame();
+        this.state = GameLayer.STATES.DEAD;
+      }
+      if (this.player.getPosition().y < -60 || this.player.getPosition().y > screenHeight + 60) {
+        console.warn("You Loss");
+        this.endGame();
+        this.state = GameLayer.STATES.DEAD;
+      }
+    }
+  },
+
+  updatePillarPairs: function() {
+    this.pillarPair1.setPosition(new cc.Point(900, 300));
+    this.pillarPair2.setPosition(new cc.Point(screenWidth + 500, 100));
+
+    this.pillarPair1.scheduleUpdate();
+    this.pillarPair2.scheduleUpdate();
+  },
+
   addKeyboardHandlers: function() {
     var self = this;
     cc.eventManager.addListener({
@@ -46,45 +85,23 @@ var GameLayer = cc.LayerColor.extend({
   },
 
   restart: function(keyCode, event) {
-    if (keyCode == cc.KEY.q && this.state == GameLayer.STATES.DEAD) {
+    if (this.state == GameLayer.STATES.DEAD) {
 
-      this.state = GameLayer.STATES.FRONT;
-
-      this.player.start();
+      this.state = GameLayer.STATES.STARTED;
       this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+      this.player.start();
+      this.player.jump();
+      this.player.score = 0;
 
-      this.pillarPair1.setPosition(new cc.Point(900, 300));
-      this.pillarPair2.setPosition(new cc.Point(screenWidth + 500, 100));
+      this.updatePillarPairs();
     }
-  },
-
-  updatePillarPairs: function() {
-    this.pillarPair1.setPosition(new cc.Point(900, 300));
-    this.pillarPair2.setPosition(new cc.Point(screenWidth + 500, 100));
-
-    this.pillarPair1.scheduleUpdate();
-    this.pillarPair2.scheduleUpdate();
   },
 
   endGame: function() {
     this.player.stop();
     this.pillarPair1.unscheduleUpdate();
     this.pillarPair2.unscheduleUpdate();
-  },
-
-  update: function() {
-    if (this.state == GameLayer.STATES.STARTED) {
-      if (this.pillarPair1 && this.pillarPair1.hit(this.player)) {
-        this.endGame();
-        this.state = GameLayer.STATES.DEAD;
-      }
-
-      if (this.pillarPair2 && this.pillarPair2.hit(this.player)) {
-        this.endGame();
-        this.state = GameLayer.STATES.DEAD;
-      }
-    }
-  },
+  }
 });
 
 var StartScene = cc.Scene.extend({
