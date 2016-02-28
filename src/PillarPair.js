@@ -15,6 +15,7 @@ var PillarPair = cc.Node.extend({
     this.setPositionX(this.getPositionX() - 5);
     if (this.getPositionX() < 0) {
       this.setPositionX(screenWidth);
+      this.setPositionY(this.randomPositionY());
     }
   },
   hit: function(player) {
@@ -22,6 +23,11 @@ var PillarPair = cc.Node.extend({
     var myPos = this.getPosition();
 
     return checkPlayerPillarCollision(playerPos.x, playerPos.y, myPos.x, myPos.y);
+  },
+  randomPositionY: function() {
+    var y = Math.random() * screenHeight;
+    console.log(y);
+    return y;
   }
 });
 
