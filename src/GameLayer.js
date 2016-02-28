@@ -7,15 +7,10 @@ var GameLayer = cc.LayerColor.extend({
     // add player in the child
     this.player = new Player();
     this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-    this.addChild(this.player);
+    this.addChild(this.player, 1);
 
     // add player in the child
     this.pillarPair = null;
-
-    // report position
-    this.positionLabel = cc.LabelTTF.create("", 'Arial', 40);
-    this.positionLabel.setPosition(new cc.Point(screenWidth - 100, screenHeight - 50));
-    this.addChild(this.positionLabel);
 
     this.addKeyboardHandlers();
     this.scheduleUpdate();
@@ -51,20 +46,21 @@ var GameLayer = cc.LayerColor.extend({
     this.pillarPair.scheduleUpdate();
   },
 
+  endGame: function() {
+    this.player.stop();
+    if (this.pillarPair) {
+      this.pillarPair.unscheduleUpdate();
+    }
+  },
+
   update: function() {
-    var pos = this.player.getPosition()
-    if (pos.y < 0 || pos.y > screenHeight) {
-      this.player.unscheduleUpdate();
-      this.pillarPair.unscheduleUpdate();
-      this.unscheduleUpdate();
+    if (this.state == GameLayer.STATES.STARTED) {
+      if (this.pillarPair && this.pillarPair.hit(this.player)) {
+        this.endGame();
+        this.state = GameLayer.STATES.DEAD;
+      }
     }
-    if (pos.x < 0 || pos.x > screenWidth) {
-      this.player.unscheduleUpdate();
-      this.pillarPair.unscheduleUpdate();
-      this.unscheduleUpdate();
-    }
-    console.log(pos);
-  }
+  },
 });
 
 var StartScene = cc.Scene.extend({
@@ -79,5 +75,6 @@ var StartScene = cc.Scene.extend({
 
 GameLayer.STATES = {
   FRONT: 1,
-  STARTED: 2
+  STARTED: 2,
+  DEAD: 3
 }

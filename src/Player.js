@@ -11,6 +11,10 @@ var Player = cc.Sprite.extend({
     this.started = true;
   },
 
+  stop: function() {
+    this.started = false;
+  },
+
   update: function(dt) {
     if (this.started) {
       var pos = this.getPosition();
@@ -23,5 +27,5 @@ var Player = cc.Sprite.extend({
   }
 });
 
-Player.G = 1;
+Player.G = 0.85;
 Player.STARTING_VELOCITY = 15;

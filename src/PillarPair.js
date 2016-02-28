@@ -12,6 +12,34 @@ var PillarPair = cc.Node.extend({
     this.addChild(this.bottomPillar);
   },
   update: function() {
-    this.setPositionX( this.getPositionX() - 5 );
+    this.setPositionX(this.getPositionX() - 5);
+    if (this.getPositionX() < 0) {
+      this.setPositionX(screenWidth);
+    }
+  },
+  hit: function(player) {
+    var playerPos = player.getPosition();
+    var myPos = this.getPosition();
+
+    return checkPlayerPillarCollision(playerPos.x, playerPos.y, myPos.x, myPos.y);
   }
 });
+
+var checkPlayerPillarCollision = function(playerX, playerY, pillarX, pillarY) {
+  var radiusPlayer = 18;
+  var radiusPillar = {
+    width: 40,
+    height: 100
+  };
+
+  if (playerX - radiusPlayer > pillarX + radiusPillar.width) {
+    return false;
+  }
+  if (playerX + radiusPlayer > pillarX - radiusPillar.width && playerY + radiusPlayer > pillarY + radiusPillar.height) {
+    return true;
+  }
+  if (playerX + radiusPlayer > pillarX - radiusPillar.width && playerY - radiusPlayer < pillarY - radiusPillar.height) {
+    return true;
+  }
+  return false;
+};
