@@ -13,11 +13,31 @@ var GameLayer = cc.LayerColor.extend({
     this.positionLabel.setPosition(new cc.Point(screenWidth - 100, screenHeight - 50));
     this.addChild(this.positionLabel);
 
+    this.addKeyboardHandlers();
     this.scheduleUpdate();
     this.player.scheduleUpdate();
 
     return true;
   },
+  addKeyboardHandlers: function() {
+    var self = this;
+    cc.eventManager.addListener({
+      event: cc.EventListener.KEYBOARD,
+      onKeyPressed: function(keyCode, event) {
+        self.onKeyDown(keyCode, event);
+      },
+      onKeyReleased: function(keyCode, event) {
+        self.onKeyUp(keyCode, event);
+      }
+    }, this);
+  },
+
+  onKeyDown: function(keyCode, event) {
+    if (keyCode == cc.KEY.space)
+      this.player.jump();
+  },
+
+  onKeyUp: function(keyCode, event) {},
   update: function() {
     var pos = this.player.getPosition()
     if (pos.y < 0 || pos.y > screenHeight) {
