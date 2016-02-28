@@ -2,6 +2,7 @@ var GameLayer = cc.LayerColor.extend({
   init: function() {
     this._super(new cc.Color(240, 220, 175, 255));
     this.setPosition(new cc.Point(0, 0));
+    this.state = GameLayer.STATES.FRONT;
 
     // add player in the child
     this.player = new Player();
@@ -15,7 +16,6 @@ var GameLayer = cc.LayerColor.extend({
 
     this.addKeyboardHandlers();
     this.scheduleUpdate();
-    this.player.scheduleUpdate();
 
     return true;
   },
@@ -33,8 +33,13 @@ var GameLayer = cc.LayerColor.extend({
   },
 
   onKeyDown: function(keyCode, event) {
-    if (keyCode == cc.KEY.space)
+    if (this.state == GameLayer.STATES.FRONT) {
+      this.state = GameLayer.STATES.STARTED;
+      this.player.scheduleUpdate();
+    }
+    if (this.state == GameLayer.STATES.STARTED) {
       this.player.jump();
+    }
   },
 
   onKeyUp: function(keyCode, event) {},
@@ -61,3 +66,8 @@ var StartScene = cc.Scene.extend({
     console.log("GameLayer created");
   }
 });
+
+GameLayer.STATES = {
+  FRONT: 1,
+  STARTED: 2
+}
