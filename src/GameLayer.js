@@ -10,7 +10,12 @@ var GameLayer = cc.LayerColor.extend({
     this.addChild(this.player, 1);
 
     // add player in the child
-    this.pillarPair = null;
+    this.pillarPair1 = new PillarPair();
+    this.pillarPair2 = new PillarPair();
+    this.pillarPair1.setPosition(new cc.Point(1000, 1000));
+    this.pillarPair2.setPosition(new cc.Point(1000, 1000));
+    this.addChild(this.pillarPair1);
+    this.addChild(this.pillarPair2);
 
     this.addKeyboardHandlers();
     this.scheduleUpdate();
@@ -24,6 +29,7 @@ var GameLayer = cc.LayerColor.extend({
       event: cc.EventListener.KEYBOARD,
       onKeyPressed: function(keyCode, event) {
         self.onKeyDown(keyCode, event);
+        self.restart(keyCode, event);
       }
     }, this);
   },
@@ -32,30 +38,48 @@ var GameLayer = cc.LayerColor.extend({
     if (this.state == GameLayer.STATES.FRONT) {
       this.state = GameLayer.STATES.STARTED;
       this.player.start();
-      this.createPillarPair();
+      this.updatePillarPairs();
     }
     if (this.state == GameLayer.STATES.STARTED) {
       this.player.jump();
     }
   },
 
-  createPillarPair: function() {
-    this.pillarPair = new PillarPair();
-    this.pillarPair.setPosition(new cc.Point(900, 300));
-    this.addChild(this.pillarPair);
-    this.pillarPair.scheduleUpdate();
+  restart: function(keyCode, event) {
+    if (keyCode == cc.KEY.q && this.state == GameLayer.STATES.DEAD) {
+
+      this.state = GameLayer.STATES.FRONT;
+
+      this.player.start();
+      this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+
+      this.pillarPair1.setPosition(new cc.Point(900, 300));
+      this.pillarPair2.setPosition(new cc.Point(screenWidth + 500, 100));
+    }
+  },
+
+  updatePillarPairs: function() {
+    this.pillarPair1.setPosition(new cc.Point(900, 300));
+    this.pillarPair2.setPosition(new cc.Point(screenWidth + 500, 100));
+
+    this.pillarPair1.scheduleUpdate();
+    this.pillarPair2.scheduleUpdate();
   },
 
   endGame: function() {
     this.player.stop();
-    if (this.pillarPair) {
-      this.pillarPair.unscheduleUpdate();
-    }
+    this.pillarPair1.unscheduleUpdate();
+    this.pillarPair2.unscheduleUpdate();
   },
 
   update: function() {
     if (this.state == GameLayer.STATES.STARTED) {
-      if (this.pillarPair && this.pillarPair.hit(this.player)) {
+      if (this.pillarPair1 && this.pillarPair1.hit(this.player)) {
+        this.endGame();
+        this.state = GameLayer.STATES.DEAD;
+      }
+
+      if (this.pillarPair2 && this.pillarPair2.hit(this.player)) {
         this.endGame();
         this.state = GameLayer.STATES.DEAD;
       }
