@@ -9,6 +9,11 @@ var GameLayer = cc.LayerColor.extend({
     this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
     this.addChild(this.player);
 
+    // add player in the child
+    this.pillarPair = new PillarPair();
+    this.pillarPair.setPosition(new cc.Point(700, 300));
+    this.addChild(this.pillarPair);
+
     // report position
     this.positionLabel = cc.LabelTTF.create("", 'Arial', 40);
     this.positionLabel.setPosition(new cc.Point(screenWidth - 100, screenHeight - 50));
@@ -16,6 +21,7 @@ var GameLayer = cc.LayerColor.extend({
 
     this.addKeyboardHandlers();
     this.scheduleUpdate();
+    this.player.scheduleUpdate();
 
     return true;
   },
@@ -35,7 +41,7 @@ var GameLayer = cc.LayerColor.extend({
   onKeyDown: function(keyCode, event) {
     if (this.state == GameLayer.STATES.FRONT) {
       this.state = GameLayer.STATES.STARTED;
-      this.player.scheduleUpdate();
+      this.player.start();
     }
     if (this.state == GameLayer.STATES.STARTED) {
       this.player.jump();
