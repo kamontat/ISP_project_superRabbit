@@ -14,7 +14,6 @@ var GameLayer = cc.LayerColor.extend({
     this.player = new Player();
     this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
     this.addChild(this.player, 1);
-
     this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
     this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
     this.addChild(this.scoreLabel);

@@ -49,4 +49,3 @@ var Player = cc.Sprite.extend({
 
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;
-Player.MOVE = 5;
