@@ -1,7 +1,5 @@
 var res = {
-  dot_png: 'res/Images/dot.png',
-  pillar_top_png: 'res/Images/pillar-top.png',
-  pillar_bottom_png: 'res/Images/pillar-bottom.png'
+  dot_png: 'res/Images/dot.png'
 };
 
 var g_resources = [];
