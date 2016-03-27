@@ -1,15 +1,12 @@
-var PillarPair = cc.Node.extend({
+var Object = cc.Node.extend({
   ctor: function() {
     this._super();
-    this.topPillar = cc.Sprite.create('res/Images/pillar-top.png');
-    this.topPillar.setAnchorPoint(new cc.Point(0.5, 0));
-    this.topPillar.setPosition(new cc.Point(0, 100));
-    this.addChild(this.topPillar);
-
-    this.bottomPillar = cc.Sprite.create('res/Images/pillar-bottom.png');
-    this.bottomPillar.setAnchorPoint(new cc.Point(0.5, 1));
-    this.bottomPillar.setPosition(new cc.Point(0, -100));
-    this.addChild(this.bottomPillar);
+    this.x = 0;
+    this.y = 0;
+    this.object = cc.Sprite.create('res/Images/object.png');
+    this.object.setAnchorPoint(new cc.Point(0.5, 0));
+    this.object.setPosition(new cc.Point(0, 100));
+    this.addChild(this.object);
   },
 
   update: function() {
@@ -27,15 +24,35 @@ var PillarPair = cc.Node.extend({
     return checkPlayerPillarCollision(playerPos.x, playerPos.y, myPos.x, myPos.y);
   },
 
-  randomPositionY: function() {
-    var y = Math.random() * screenHeight;
-    if (y <= screenHeight - 200) {
-      y = Math.random() * screenHeight;
+  randomPosition: function() {
+    var rand = Math.ceil(Math.random() * 4);
+
+    switch (rand) {
+      // left
+      case 1:
+          this.x = 0;
+        this.y = Math.ceil(Math.random() * screenHeight);
+        break;
+      // up
+      case 2:
+        this.x = Math.ceil(Math.random() * screenWidth);
+        this.y = screenHeight;
+        break;
+      // right
+      case 3:
+        this.x = screenWidth;
+        this.y = Math.ceil(Math.random() * screenHeight);
+        break;
+      // down
+      case 4:
+        this.x = Math.ceil(Math.random() * screenWidth);
+        this.y = 0;
+        break;
+      // other
+      default:
+        console.error("Cause Error on randomPosition in Object");
+        break;
     }
-    if (y <= 200) {
-      y = Math.random() * screenHeight;
-    }
-    return y;
   }
 });
 
