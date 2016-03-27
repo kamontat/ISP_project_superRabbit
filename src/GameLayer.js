@@ -14,6 +14,14 @@ var GameLayer = cc.LayerColor.extend({
     this.player = new Player();
     this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
     this.addChild(this.player, 1);
+
+    this.somethings = [new Something(), new Something(), new Something(), new Something()];
+
+    for (var i = 0; i < this.somethings.length; i++) {
+      this.addChild(this.somethings[i]);
+    }
+
+
     this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
     this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
     this.addChild(this.scoreLabel);
@@ -21,6 +29,10 @@ var GameLayer = cc.LayerColor.extend({
     this.addKeyboardHandlers();
     this.scheduleUpdate();
     this.player.scheduleUpdate();
+
+    for (var i = 0; i < this.somethings.length; i++) {
+      this.somethings[i].scheduleUpdate();
+    }
 
     return true;
   },
