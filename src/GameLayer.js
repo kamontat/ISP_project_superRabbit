@@ -21,7 +21,6 @@ var GameLayer = cc.LayerColor.extend({
       this.addChild(this.somethings[i]);
     }
 
-
     this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
     this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
     this.addChild(this.scoreLabel);
