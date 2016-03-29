@@ -5,12 +5,14 @@ var Something = cc.Sprite.extend({
         this.x = 0;
         this.y = 0;
 
-        this.randMoveX = Math.random() * 10;
-        this.randMoveY = Math.random() * 10;
+        this.randMoveX = Math.random() * 7;
+        this.randMoveY = Math.random() * 7;
+
+        this.started = true;
 
         while (this.randMoveX <= 3 || this.randMoveY <= 3) {
-            this.randMoveX = Math.random() * 7;
-            this.randMoveY = Math.random() * 7;
+            this.randMoveX = Math.random() * 5;
+            this.randMoveY = Math.random() * 5;
         }
 
         this.randDir = Math.ceil(Math.random() * 2);
@@ -21,50 +23,52 @@ var Something = cc.Sprite.extend({
     },
 
     update: function () {
-        this.warp();
-        switch (this.rand) {
-            // left
-            case Something.DIR.LEFT:
-                if (this.randDir == 1) {
-                    this.setPosition(new cc.Point(this.x + this.randMoveX, this.y + this.randMoveY));
-                } else {
-                    this.setPosition(new cc.Point(this.x + this.randMoveX, this.y - this.randMoveY));
-                }
-                break;
-            // up
-            case Something.DIR.UP:
-                if (this.randDir == 1) {
-                    this.setPosition(new cc.Point(this.x + this.randMoveX, this.y - this.randMoveY));
-                } else {
-                    this.setPosition(new cc.Point(this.x - this.randMoveX, this.y - this.randMoveY));
-                }
-                break;
-            // right
-            case Something.DIR.RIGHT:
-                if (this.randDir == 1) {
-                    this.setPosition(new cc.Point(this.x - this.randMoveX, this.y + this.randMoveY));
-                } else {
-                    this.setPosition(new cc.Point(this.x - this.randMoveX, this.y - this.randMoveY));
-                }
-                break;
-            // down
-            case Something.DIR.DOWN:
-                if (this.randDir == 1) {
-                    this.setPosition(new cc.Point(this.x + this.randMoveX, this.y + this.randMoveY));
-                } else {
-                    this.setPosition(new cc.Point(this.x - this.randMoveX, this.y + this.randMoveY));
-                }
-                break;
-            // other
-            default:
-                console.error("Cause Error on Update in Something");
-                break;
+        if (this.started) {
+            this.warp();
+            switch (this.rand) {
+                // left
+                case Something.DIR.LEFT:
+                    if (this.randDir == 1) {
+                        this.setPosition(new cc.Point(this.x + this.randMoveX, this.y + this.randMoveY));
+                    } else {
+                        this.setPosition(new cc.Point(this.x + this.randMoveX, this.y - this.randMoveY));
+                    }
+                    break;
+                // up
+                case Something.DIR.UP:
+                    if (this.randDir == 1) {
+                        this.setPosition(new cc.Point(this.x + this.randMoveX, this.y - this.randMoveY));
+                    } else {
+                        this.setPosition(new cc.Point(this.x - this.randMoveX, this.y - this.randMoveY));
+                    }
+                    break;
+                // right
+                case Something.DIR.RIGHT:
+                    if (this.randDir == 1) {
+                        this.setPosition(new cc.Point(this.x - this.randMoveX, this.y + this.randMoveY));
+                    } else {
+                        this.setPosition(new cc.Point(this.x - this.randMoveX, this.y - this.randMoveY));
+                    }
+                    break;
+                // down
+                case Something.DIR.DOWN:
+                    if (this.randDir == 1) {
+                        this.setPosition(new cc.Point(this.x + this.randMoveX, this.y + this.randMoveY));
+                    } else {
+                        this.setPosition(new cc.Point(this.x - this.randMoveX, this.y + this.randMoveY));
+                    }
+                    break;
+                // other
+                default:
+                    console.error("Cause Error on Update in Something");
+                    break;
+            }
+            this.x = this.getPositionX();
+            this.y = this.getPositionY();
         }
-        this.x = this.getPositionX();
-        this.y = this.getPositionY();
     },
 
-    warp: function() {
+    warp: function () {
         if (this.x < 0 || this.y < 0 || this.x > screenWidth || this.y > screenHeight) {
             this.randomPosition();
         }
@@ -106,6 +110,14 @@ var Something = cc.Sprite.extend({
                 break;
         }
         this.setPosition(new cc.Point(this.x, this.y));
+    },
+
+    start: function () {
+        this.started = true;
+    },
+
+    stop: function () {
+        this.started = false;
     }
 });
 

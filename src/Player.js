@@ -4,7 +4,7 @@ var Player = cc.Sprite.extend({
     this.initWithFile("res/Images/dot.png");
 
     this.score = 0;
-    this.live = 5;
+    this.live = Player.lIVE;
     this.vx = 0;
     this.vy = Player.STARTING_VELOCITY;
     this.started = false;
@@ -18,11 +18,14 @@ var Player = cc.Sprite.extend({
     }
   },
 
-  updateScore: function(pillar) {
-    var myPos = this.getPosition();
-    if (myPos.x == pillarPos.x) {
-      this.score++;
+  checkOut: function() {
+    if (this.getPositionX() < 0 || this.getPositionX() > screenWidth) {
+      return true;
     }
+    if (this.getPositionY() < 0 || this.getPositionY() > screenHeight) {
+      return true;
+    }
+    return false;
   },
 
   jump: function(keyCode) {
@@ -47,5 +50,6 @@ var Player = cc.Sprite.extend({
   }
 });
 
+Player.lIVE = 5;
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;
