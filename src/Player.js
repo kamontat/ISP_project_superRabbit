@@ -1,3 +1,7 @@
+/**
+ * @class
+ * player class in this game
+ */
 var Player = cc.Sprite.extend({
     ctor: function () {
         this._super();
@@ -9,7 +13,10 @@ var Player = cc.Sprite.extend({
         this.vy = Player.STARTING_VELOCITY;
         this.started = false;
     },
-
+    /**
+     * @function
+     * update player to move by gravity
+     */
     update: function () {
         if (this.started) {
             var pos = this.getPosition();
@@ -18,16 +25,24 @@ var Player = cc.Sprite.extend({
         }
     },
 
+    /**
+     *  To check player position this is out from screen or not?
+     * @returns {boolean}
+     */
     checkOut: function () {
         if (this.getPositionX() < 0 || this.getPositionX() > screenWidth) {
             return true;
-        }
-        if (this.getPositionY() < 0 || this.getPositionY() > screenHeight) {
+        } else if (this.getPositionY() < 0 || this.getPositionY() > screenHeight) {
             return true;
         }
         return false;
     },
 
+    /**
+     * get keycode and check which button be press
+     * And make player jump to that direction
+     * @param keyCode the code of keyboard
+     */
     jump: function (keyCode) {
         this.vy = Player.STARTING_VELOCITY;
         if (keyCode == cc.KEY.left) {
@@ -41,6 +56,11 @@ var Player = cc.Sprite.extend({
         }
     },
 
+    /**
+     * check player hit with some obstacle
+     * @param obstacle some object to check hit or not
+     * @returns {boolean}
+     */
     hit: function (obstacle) {
         var posPlayer = this.getPosition();
         var posObstacle = obstacle.getPosition();
@@ -49,10 +69,16 @@ var Player = cc.Sprite.extend({
                     (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
     },
 
+    /**
+     * if want player to start
+     */
     start: function () {
         this.started = true;
     },
 
+    /**
+     * if want player to stop
+     */
     stop: function () {
         this.started = false;
     }
