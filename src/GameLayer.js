@@ -23,6 +23,15 @@ var GameLayer = cc.LayerColor.extend({
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
         this.addChild(this.scoreLabel);
+
+        this.label = cc.LabelTTF.create("Live: ", 'Arial', 40);
+        this.label.setPosition(new cc.Point(screenWidth - 100, screenHeight - 100));
+        this.addChild(this.label);
+
+        this.liveLabel = cc.LabelTTF.create(this.player.live, 'Arial', 40);
+        this.liveLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
+        this.addChild(this.liveLabel);
+
         this.addKeyboardHandlers();
         this.scheduleUpdate();
         this.player.scheduleUpdate();
@@ -86,9 +95,17 @@ var GameLayer = cc.LayerColor.extend({
                         this.player.lossLive() ? this.state = GameLayer.STATES.DEAD : this.state = GameLayer.STATES.STARTED;
                         // obslacle
                         this.somethings[i].randomPosition();
-
-                        console.info(this.player.live);
                     }
+                }
+
+                // update label
+                this.liveLabel.setString(this.player.live);
+                if (this.player.live == 2) {
+                    this.liveLabel.setColor(cc.color(255, 255, 0));
+                } else if (this.player.live <= 1) {
+                    this.liveLabel.setColor(cc.color(255, 0, 0));
+                } else {
+                    this.liveLabel.setColor(cc.color(0, 0, 255));
                 }
             }
         }
@@ -156,6 +173,7 @@ var StartScene = cc.Scene.extend({
 });
 
 GameLayer.NUMOBJECT = 7;
+
 GameLayer.STATES = {
     PAUSE: 1,
     STARTED: 2,
