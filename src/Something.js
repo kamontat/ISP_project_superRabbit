@@ -5,21 +5,19 @@ var Something = cc.Sprite.extend({
         this.x = 0;
         this.y = 0;
 
-        this.randMoveX = Math.random() * 7;
-        this.randMoveY = Math.random() * 7;
+        this.randMoveX = Math.random() * Something.SPEEDNOTOVER;
+        this.randMoveY = Math.random() * Something.SPEEDNOTOVER;
 
         this.started = true;
 
-        while (this.randMoveX <= 3 || this.randMoveY <= 3) {
-            this.randMoveX = Math.random() * 5;
-            this.randMoveY = Math.random() * 5;
+        while (this.randMoveX <= Something.SPEEDATLEAST || this.randMoveY <= Something.SPEEDATLEAST) {
+            this.randMoveX = Math.random() * Something.SPEEDNOTOVER;
+            this.randMoveY = Math.random() * Something.SPEEDNOTOVER;
         }
 
         this.randDir = Math.ceil(Math.random() * 2);
         this.rand = 0;
         this.randomPosition();
-
-        console.info("Create and add finish");
     },
 
     update: function () {
@@ -113,6 +111,9 @@ var Something = cc.Sprite.extend({
         this.started = false;
     }
 });
+
+Something.SPEEDATLEAST = 3;
+Something.SPEEDNOTOVER = 10;
 
 Something.DIR = {
     LEFT: 1,

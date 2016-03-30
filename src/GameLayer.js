@@ -14,9 +14,9 @@ var GameLayer = cc.LayerColor.extend({
         this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
         this.addChild(this.player, 1);
 
-        this.somethings = [new Something(), new Something(), new Something(), new Something()];
-
-        for (var i = 0; i < this.somethings.length; i++) {
+        this.somethings = [];
+        for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
+            this.somethings.push(new Something());
             this.addChild(this.somethings[i]);
         }
 
@@ -151,9 +151,10 @@ var StartScene = cc.Scene.extend({
     }
 });
 
+GameLayer.NUMOBJECT = 7;
 GameLayer.STATES = {
     PAUSE: 1,
     STARTED: 2,
     DEAD: 3,
     END: 0
-}
+};
