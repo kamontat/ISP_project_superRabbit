@@ -82,8 +82,12 @@ var GameLayer = cc.LayerColor.extend({
                 // check hit
                 for (var i = 0; i < this.somethings.length; i++) {
                     if (this.player.hit(this.somethings[i])) {
+                        // loss live.. another way of if.
+                        this.player.lossLive() ? this.state = GameLayer.STATES.DEAD : this.state = GameLayer.STATES.STARTED;
+                        // obslacle
                         this.somethings[i].randomPosition();
-                        console.warn("HIT!");
+
+                        console.info(this.player.live);
                     }
                 }
             }

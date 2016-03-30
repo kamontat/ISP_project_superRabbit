@@ -3,6 +3,10 @@
  * player class in this game
  */
 var Player = cc.Sprite.extend({
+    /**
+     * @constructor
+     * init player in first time.
+     */
     ctor: function () {
         this._super();
         this.initWithFile("res/Images/dot.png");
@@ -13,9 +17,9 @@ var Player = cc.Sprite.extend({
         this.vy = Player.STARTING_VELOCITY;
         this.started = false;
     },
+
     /**
-     * @function
-     * update player to move by gravity
+     * update player to move by gravity.
      */
     update: function () {
         if (this.started) {
@@ -23,6 +27,14 @@ var Player = cc.Sprite.extend({
             this.setPosition(new cc.Point(pos.x + this.vx, pos.y + this.vy));
             this.vy -= Player.G;
         }
+    },
+
+    lossLive: function () {
+        this.live--;
+        if (this.live <= 0) {
+            return true;
+        }
+        return false;
     },
 
     /**
