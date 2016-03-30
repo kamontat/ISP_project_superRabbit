@@ -1,3 +1,6 @@
+var screenWidth = 800; // x axis
+var screenHeight = 600; // y axis
+
 /**
  * A brief explanation for "project.json":
  * Here is the content of project.json file, this is the global configuration for your game, you can modify it to customize some behavior.
@@ -51,9 +54,6 @@
  }
  *
  */
-
- var screenWidth = 800; // x axis
- var screenHeight = 600; // y axis
 
 cc.game.onStart = function() {
   if (!cc.sys.isNative && document.getElementById("cocosLoading")) //If referenced loading.js, please remove it

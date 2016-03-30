@@ -74,13 +74,6 @@ var Something = cc.Sprite.extend({
         }
     },
 
-    hit: function (player) {
-        var playerPos = player.getPosition();
-        var myPos = this.getPosition();
-
-        return false;
-    },
-
     randomPosition: function () {
         this.rand = Math.ceil(Math.random() * 4);
         switch (this.rand) {

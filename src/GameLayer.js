@@ -1,8 +1,7 @@
-// collect object and avoid ... thing <- display on randomly
-// gun to shoot avoid thing <- should have limit bullet
-// time limit <- make game more hard
-// some simple map <- make game more hard
-// some item <- make game more easy
+/**
+ * @author ""
+ * @version 1.5.0
+ */
 
 var GameLayer = cc.LayerColor.extend({
     init: function () {
@@ -24,12 +23,12 @@ var GameLayer = cc.LayerColor.extend({
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
         this.addChild(this.scoreLabel);
-            this.addKeyboardHandlers();
-            this.scheduleUpdate();
-            this.player.scheduleUpdate();
-            for (var i = 0; i < this.somethings.length; i++) {
-                this.somethings[i].scheduleUpdate();
-            }
+        this.addKeyboardHandlers();
+        this.scheduleUpdate();
+        this.player.scheduleUpdate();
+        for (var i = 0; i < this.somethings.length; i++) {
+            this.somethings[i].scheduleUpdate();
+        }
 
         return true;
     },
@@ -39,7 +38,7 @@ var GameLayer = cc.LayerColor.extend({
         if (this.state != GameLayer.STATES.END) {
             // out length
             if (this.player.checkOut()) {
-                this.state = GameLayer.STATES.DEAD;
+                this.endGame();
             }
 
             // first player of press pause button
@@ -78,6 +77,14 @@ var GameLayer = cc.LayerColor.extend({
                 this.player.start();
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].start();
+                }
+
+                // check hit
+                for (var i = 0; i < this.somethings.length; i++) {
+                    if (this.player.hit(this.somethings[i])) {
+                        this.somethings[i].randomPosition();
+                        console.warn("HIT!");
+                    }
                 }
             }
         }
