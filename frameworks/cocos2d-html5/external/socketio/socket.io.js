@@ -1931,7 +1931,7 @@
 
         this.emit('packet', packet);
 
-        // Socket is live - any packet counts
+        // Socket is life - any packet counts
         this.emit('heartbeat');
 
         switch (packet.type) {
@@ -5053,7 +5053,7 @@
           return continuationByte & 0x3F;
         }
 
-        // If we end up here, it¡¯s not a continuation byte
+        // If we end up here, itï¿½ï¿½s not a continuation byte
         throw Error('Invalid continuation byte');
       }
 

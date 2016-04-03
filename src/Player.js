@@ -12,7 +12,7 @@ var Player = cc.Sprite.extend({
         this.initWithFile("res/Images/dot.png");
 
         this.score = 0;
-        this.live = Player.lIVE;
+        this.life = Player.lIFE;
         this.vx = 0;
         this.vy = Player.STARTING_VELOCITY;
         this.started = false;
@@ -29,9 +29,14 @@ var Player = cc.Sprite.extend({
         }
     },
 
+    /**
+     * when loss life<br>
+     *     @function will check if life is zero it will return true
+     * @returns {boolean} true when it dead; otherwise, return false
+     */
     lossLive: function () {
-        this.live--;
-        if (this.live <= 0) {
+        this.life--;
+        if (this.life <= 0) {
             return true;
         }
         return false;
@@ -96,9 +101,11 @@ var Player = cc.Sprite.extend({
     }
 });
 
+// radius picture
 Player.HALFX = 20;
 Player.HALFY = 20;
 
-Player.lIVE = 5;
+Player.lIFE = 5;
+
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;

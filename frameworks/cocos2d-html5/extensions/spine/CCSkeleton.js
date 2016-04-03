@@ -384,7 +384,7 @@ sp.Skeleton = cc.Node.extend(/** @lends sp.Skeleton# */{
     },
 
     /**
-     * Update will be called automatically every frame if "scheduleUpdate" is called when the node is "live".
+     * Update will be called automatically every frame if "scheduleUpdate" is called when the node is "life".
      * @param {Number} dt Delta time since last update
      */
     update: function (dt) {

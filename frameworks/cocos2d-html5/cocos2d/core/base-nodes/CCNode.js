@@ -2007,7 +2007,7 @@ cc.Node = cc.Class.extend(/** @lends cc.Node# */{
     },
 
     /**
-     * Update will be called automatically every frame if "scheduleUpdate" is called when the node is "live".<br/>
+     * Update will be called automatically every frame if "scheduleUpdate" is called when the node is "life".<br/>
      * The default behavior is to invoke the visit function of node's componentContainer.<br/>
      * Override me to implement your own update logic.
      * @function

@@ -211,7 +211,7 @@ sp.SkeletonAnimation = sp.Skeleton.extend(/** @lends sp.SkeletonAnimation# */{
     },
 
     /**
-     * Update will be called automatically every frame if "scheduleUpdate" is called when the node is "live".
+     * Update will be called automatically every frame if "scheduleUpdate" is called when the node is "life".
      * It updates animation's state and skeleton's world transform.
      * @param {Number} dt Delta time since last update
      * @override

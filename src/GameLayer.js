@@ -1,6 +1,5 @@
 /**
- * @author ""
- * @
+ * @author "Soraya Saenna"
  * @version 1.5.0
  */
 
@@ -10,10 +9,12 @@ var GameLayer = cc.LayerColor.extend({
         this.setPosition(new cc.Point(0, 0));
         this.state = GameLayer.STATES.PAUSE;
 
+
         // add player in the child
         this.player = new Player();
         this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
         this.addChild(this.player, 1);
+
 
         this.somethings = [];
         for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
@@ -21,20 +22,24 @@ var GameLayer = cc.LayerColor.extend({
             this.addChild(this.somethings[i]);
         }
 
+
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
         this.addChild(this.scoreLabel);
+
 
         this.label = cc.LabelTTF.create("Live: ", 'Arial', 40);
         this.label.setPosition(new cc.Point(screenWidth - 100, screenHeight - 100));
         this.addChild(this.label);
 
-        this.liveLabel = cc.LabelTTF.create(this.player.live, 'Arial', 40);
+
+        this.liveLabel = cc.LabelTTF.create(this.player.life, 'Arial', 40);
         this.liveLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
         this.liveLabel.setColor(cc.color(0, 0, 255));
         this.addChild(this.liveLabel);
 
         this.addKeyboardHandlers();
+
         this.scheduleUpdate();
         this.player.scheduleUpdate();
         for (var i = 0; i < this.somethings.length; i++) {
@@ -72,20 +77,20 @@ var GameLayer = cc.LayerColor.extend({
                 // check hit
                 for (var i = 0; i < this.somethings.length; i++) {
                     if (this.player.hit(this.somethings[i])) {
-                        // loss live.. another way of if.
+                        // loss life.. another way of if.
                         this.player.lossLive() ? this.endGame() : this.state = GameLayer.STATES.STARTED;
-                        // set live label
-                        this.liveLabel.setString(this.player.live);
+                        // set life label
+                        this.liveLabel.setString(this.player.life);
                         // obstacle
                         this.somethings[i].randomPosition();
                     }
                 }
 
                 // update label and color
-                this.liveLabel.setString(this.player.live);
-                if (this.player.live == 2) {
+                this.liveLabel.setString(this.player.life);
+                if (this.player.life == 2) {
                     this.liveLabel.setColor(cc.color(255, 255, 0));
-                } else if (this.player.live <= 1) {
+                } else if (this.player.life <= 1) {
                     this.liveLabel.setColor(cc.color(255, 0, 0));
                 } else {
                     this.liveLabel.setColor(cc.color(0, 0, 255));
@@ -159,7 +164,7 @@ var GameLayer = cc.LayerColor.extend({
             this.player.start();
             this.player.jump();
             this.player.score = 0;
-            this.player.live = Player.lIVE;
+            this.player.life = Player.lIFE;
 
             // remove obstacle
             for (var i = 0; i < this.somethings.length; i++) {
