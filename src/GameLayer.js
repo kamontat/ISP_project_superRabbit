@@ -12,12 +12,19 @@ var GameLayer = cc.LayerColor.extend({
 
         //declare variable for timer
         this.time = 0;
+        this.numItem = 0;
 
 
         // add player in the child
         this.player = new Player();
         this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
         this.addChild(this.player, 1);
+
+
+        //addItem
+        this.item = new Item();
+        this.addChild(this.item, 1);
+        this.scheduleUpdate();
 
 
         this.somethings = [];
@@ -80,7 +87,7 @@ var GameLayer = cc.LayerColor.extend({
                     this.somethings[i].start();
                 }
 
-                // check hit
+                // check hit obstacles
                 for (var i = 0; i < this.somethings.length; i++) {
                     if (this.player.hit(this.somethings[i])) {
                         // loss life.. another way of if.
@@ -92,6 +99,11 @@ var GameLayer = cc.LayerColor.extend({
                     }
                 }
 
+                // check hit item
+                if(this.player.hit(this.item)) {
+                    this.item.setVisible(false);
+                }
+                
                 // update label and color
                 this.liveLabel.setString(this.player.life);
                 if (this.player.life == 2) {
@@ -187,7 +199,7 @@ var GameLayer = cc.LayerColor.extend({
             console.error("You not DEAD!");
         }
     },
-
+    
     timer: function () {
         this.time++;
         this.scoreLabel.setString("score: " + Math.round(this.time / 10));

@@ -85,6 +85,13 @@ var Player = cc.Sprite.extend({
         return ((Math.abs(posPlayer.x - posObstacle.x) <= Player.HALFX) &&
                     (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
     },
+    
+    hitItem: function(item) {
+        var posPlayer = this.getPosition();
+        var posItem = item.getPosition();
+        return ((Math.abs(posPlayer.x - posObstacle.x) <= Player.HALFX) &&
+                            (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
+            },
 
     /**
      * if want player to start
