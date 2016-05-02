@@ -4,10 +4,14 @@
  */
 
 var GameLayer = cc.LayerColor.extend({
+
     init: function () {
         this._super(new cc.Color(240, 220, 175, 255));
         this.setPosition(new cc.Point(0, 0));
         this.state = GameLayer.STATES.PAUSE;
+
+        //declare variable for timer
+        this.time = 0;
 
 
         // add player in the child
@@ -50,6 +54,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     update: function () {
+
         // end is mean END
         if (this.state != GameLayer.STATES.END) {
             // out length
@@ -70,6 +75,7 @@ var GameLayer = cc.LayerColor.extend({
             // Play iT!
             if (this.state == GameLayer.STATES.STARTED) {
                 this.player.start();
+                this.timer();
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].start();
                 }
@@ -149,10 +155,6 @@ var GameLayer = cc.LayerColor.extend({
             // check obstacle
             console.info(this.somethings);
         }
-
-        if (keyCode == cc.KEY.a) {
-            this.addObstacle();
-        }
     },
 
     restart: function () {
@@ -165,6 +167,10 @@ var GameLayer = cc.LayerColor.extend({
             this.player.jump();
             this.player.score = 0;
             this.player.life = Player.lIFE;
+
+            // timer
+            this.time = 0;
+            this.scoreLabel.setString("score: 0");
 
             // remove obstacle
             for (var i = 0; i < this.somethings.length; i++) {
@@ -180,6 +186,13 @@ var GameLayer = cc.LayerColor.extend({
         } else {
             console.error("You not DEAD!");
         }
+    },
+
+    timer: function () {
+        this.time++;
+        this.scoreLabel.setString("score: " + Math.round(this.time / 10));
+        if (this.time / 20 % 10 == 0)
+            this.addObstacle();
     },
 
     endGame: function () {
@@ -213,7 +226,7 @@ var StartScene = cc.Scene.extend({
     }
 });
 
-GameLayer.NUMOBJECT = 7;
+GameLayer.NUMOBJECT = 4;
 
 GameLayer.STATES = {
     PAUSE: 1,
