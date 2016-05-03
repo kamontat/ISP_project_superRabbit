@@ -10,6 +10,11 @@ var GameLayer = cc.LayerColor.extend({
         this.setPosition(new cc.Point(0, 0));
         this.state = GameLayer.STATES.PAUSE;
 
+        //add background
+        this.background = new Background();
+        this.background.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+        this.addChild(this.background);
+
         //declare variable for timer
         this.time = 0;
         this.numItem = 0;

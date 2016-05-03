@@ -16,6 +16,7 @@
     "src/GameLayer.js",
     "src/Player.js",
     "src/Something.js",
-    "src/Item.js"
+    "src/Item.js",
+    "src/Background.js"
   ]
 }
