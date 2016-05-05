@@ -9,8 +9,8 @@ var Item = cc.Sprite.extend({
         },
 
         randomPos: function () {
-            var x = Math.random() * screenWidth / 2;
-            var y = Math.random() * screenHeight / 2;
+            var x = 75 + (Math.random() * (screenWidth - 175));
+            var y = 75 + (Math.random() * (screenHeight - 175));
             this.setPosition(new cc.Point(x, y));
 
             this.time = 0;
@@ -19,7 +19,7 @@ var Item = cc.Sprite.extend({
 
         hide: function () {
             this.setPosition(new cc.Point(-99, -99));
-            
+
             this.time = 0;
             this.appear = false;
         },

@@ -63,14 +63,13 @@ var GameLayer = cc.LayerColor.extend({
 
         cc.loader.loadTxt("test.txt", function (err, txt) {
             HISCORE = txt;
-            console.log(txt);
+            console.log(txt.toString());
         });
 
         return true;
     },
 
     update: function () {
-
         // end is mean END
         if (this.state != GameLayer.STATES.END) {
             // out length
@@ -191,6 +190,9 @@ var GameLayer = cc.LayerColor.extend({
             this.player.jump();
             this.player.score = 0;
             this.player.life = Player.lIFE;
+
+            // item
+            this.item.randomPos();
 
             // timer
             this.time = 0;
