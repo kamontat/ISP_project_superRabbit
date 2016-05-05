@@ -4,7 +4,7 @@ var Item = cc.Sprite.extend({
             this.initWithFile("res/Images/heart.png");
             this.randomPos();
             this.time = 0;
-            this.count = 0;
+            this.appear = true;
             this.started = false;
         },
 
@@ -17,19 +17,21 @@ var Item = cc.Sprite.extend({
         },
 
         hide: function () {
-            this.count = 0;
             this.setPosition(new cc.Point(-99, -99));
         },
 
         update: function () {
+            this.time++;
             if (this.started) {
-                this.time++;
                 // every 5 second
-                if (this.time / 40 % 5 == 0) {
-                    this.randomPos();
-                    this.count++;
-                    if (this.count > 1) {
+                if (this.time / 60 % Item.SECOND_TO_APPEAR == 0) {
+                    console.log(this.time / 60);
+                    if (this.appear) {
                         this.hide();
+                        this.appear = false;
+                    } else {
+                        this.randomPos();
+                        this.appear = true;
                     }
                 }
             }
@@ -47,7 +49,10 @@ var Item = cc.Sprite.extend({
          */
         stop: function () {
             this.started = false;
+            // reset time
+            this.time = 0;
         }
     }
 );
 
+Item.SECOND_TO_APPEAR = 5;

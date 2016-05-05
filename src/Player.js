@@ -83,15 +83,15 @@ var Player = cc.Sprite.extend({
         var posObstacle = obstacle.getPosition();
 
         return ((Math.abs(posPlayer.x - posObstacle.x) <= Player.HALFX) &&
-                    (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
+        (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
     },
-    
-    hitItem: function(item) {
+
+    hitItem: function (item) {
         var posPlayer = this.getPosition();
         var posItem = item.getPosition();
         return ((Math.abs(posPlayer.x - posObstacle.x) <= Player.HALFX) &&
-                            (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
-            },
+        (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
+    },
 
     /**
      * if want player to start
@@ -112,7 +112,7 @@ var Player = cc.Sprite.extend({
 Player.HALFX = 20;
 Player.HALFY = 20;
 
-Player.lIFE = 5;
+Player.lIFE = 600;
 
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;

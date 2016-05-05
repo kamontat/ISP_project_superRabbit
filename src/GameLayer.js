@@ -215,7 +215,7 @@ var GameLayer = cc.LayerColor.extend({
     timer: function () {
         this.time++;
         this.scoreLabel.setString("score: " + Math.round(this.time / 10));
-        if (this.time / 20 % 10 == 0)
+        if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
             this.addObstacle();
     },
 
