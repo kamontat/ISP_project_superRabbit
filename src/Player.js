@@ -112,7 +112,7 @@ var Player = cc.Sprite.extend({
 Player.HALFX = 20;
 Player.HALFY = 20;
 
-Player.lIFE = 600;
+Player.lIFE = 5;
 
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;

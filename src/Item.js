@@ -12,12 +12,16 @@ var Item = cc.Sprite.extend({
             var x = Math.random() * screenWidth / 2;
             var y = Math.random() * screenHeight / 2;
             this.setPosition(new cc.Point(x, y));
-            this.time = 0;
 
+            this.time = 0;
+            this.appear = true;
         },
 
         hide: function () {
             this.setPosition(new cc.Point(-99, -99));
+            
+            this.time = 0;
+            this.appear = false;
         },
 
         update: function () {
@@ -28,10 +32,8 @@ var Item = cc.Sprite.extend({
                     console.log(this.time / 60);
                     if (this.appear) {
                         this.hide();
-                        this.appear = false;
                     } else {
                         this.randomPos();
-                        this.appear = true;
                     }
                 }
             }
