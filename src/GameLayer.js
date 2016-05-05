@@ -2,6 +2,7 @@
  * @author "Soraya Saenna"
  * @version 1.5.0
  */
+var HISCORE = 0;
 
 var GameLayer = cc.LayerColor.extend({
 
@@ -19,7 +20,6 @@ var GameLayer = cc.LayerColor.extend({
         this.time = 0;
         this.numItem = 0;
 
-
         // add player in the child
         this.player = new Player();
         this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
@@ -28,9 +28,8 @@ var GameLayer = cc.LayerColor.extend({
 
         //addItem
         this.item = new Item();
-        this.addChild(this.item, 1);
-        this.scheduleUpdate();
-
+        this.addChild(this.item);
+        this.item.scheduleUpdate();
 
         this.somethings = [];
         for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
@@ -49,10 +48,10 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.label);
 
 
-        this.liveLabel = cc.LabelTTF.create(this.player.life, 'Arial', 40);
-        this.liveLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
-        this.liveLabel.setColor(cc.color(0, 0, 255));
-        this.addChild(this.liveLabel);
+        this.lifeLabel = cc.LabelTTF.create(this.player.life, 'Arial', 40);
+        this.lifeLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
+        this.lifeLabel.setColor(cc.color(0, 0, 255));
+        this.addChild(this.lifeLabel);
 
         this.addKeyboardHandlers();
 
@@ -61,6 +60,11 @@ var GameLayer = cc.LayerColor.extend({
         for (var i = 0; i < this.somethings.length; i++) {
             this.somethings[i].scheduleUpdate();
         }
+
+        cc.loader.loadTxt("test.txt", function (err, txt) {
+            HISCORE = txt;
+            console.log(txt);
+        });
 
         return true;
     },
@@ -73,11 +77,12 @@ var GameLayer = cc.LayerColor.extend({
             if (this.player.checkOut()) {
                 this.endGame();
             }
-
             // first player of press pause button
             if (this.state == GameLayer.STATES.PAUSE) {
                 // stop player
                 this.player.stop();
+                // stop item
+                this.item.stop();
                 // stop obstacle
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].stop();
@@ -87,6 +92,7 @@ var GameLayer = cc.LayerColor.extend({
             // Play iT!
             if (this.state == GameLayer.STATES.STARTED) {
                 this.player.start();
+                this.item.start();
                 this.timer();
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].start();
@@ -98,25 +104,26 @@ var GameLayer = cc.LayerColor.extend({
                         // loss life.. another way of if.
                         this.player.lossLive() ? this.endGame() : this.state = GameLayer.STATES.STARTED;
                         // set life label
-                        this.liveLabel.setString(this.player.life);
+                        this.lifeLabel.setString(this.player.life);
                         // obstacle
                         this.somethings[i].randomPosition();
                     }
                 }
 
                 // check hit item
-                if(this.player.hit(this.item)) {
-                    this.item.setVisible(false);
+                if (this.player.hit(this.item)) {
+                    this.player.life++;
+                    this.item.hide();
                 }
-                
+
                 // update label and color
-                this.liveLabel.setString(this.player.life);
+                this.lifeLabel.setString(this.player.life);
                 if (this.player.life == 2) {
-                    this.liveLabel.setColor(cc.color(255, 255, 0));
+                    this.lifeLabel.setColor(cc.color(255, 255, 0));
                 } else if (this.player.life <= 1) {
-                    this.liveLabel.setColor(cc.color(255, 0, 0));
+                    this.lifeLabel.setColor(cc.color(255, 0, 0));
                 } else {
-                    this.liveLabel.setColor(cc.color(0, 0, 255));
+                    this.lifeLabel.setColor(cc.color(0, 0, 255));
                 }
             }
         }
@@ -204,7 +211,7 @@ var GameLayer = cc.LayerColor.extend({
             console.error("You not DEAD!");
         }
     },
-    
+
     timer: function () {
         this.time++;
         this.scoreLabel.setString("score: " + Math.round(this.time / 10));
