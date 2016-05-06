@@ -16,6 +16,10 @@ var GameLayer = cc.LayerColor.extend({
             this.background.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
             this.addChild(this.background);
 
+            this.endPage = new EndPage();
+            this.endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+
+
             //declare variable for timer
             this.time = 0;
             this.numItem = 0;
@@ -127,7 +131,7 @@ var GameLayer = cc.LayerColor.extend({
                         this.player.life++;
                         this.item.hide();
                     }
-                    
+
 
                     // update label and color
                     this.lifeLabel.setString(this.player.life);
@@ -246,10 +250,12 @@ var GameLayer = cc.LayerColor.extend({
             if (confirm("Do you want to play again!?")) {
                 this.restart();
             } else {
-                this.endLabel = cc.LabelTTF.create("GAME IS END", 'Arial', 100);
-                this.endLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-                this.endLabel.setColor(cc.color(255, 0, 0));
-                this.addChild(this.endLabel);
+
+                this.addChild(this.endPage, 1);
+                // this.endLabel = cc.LabelTTF.create("GAME IS END", 'Arial', 100);
+                // this.endLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+                // this.endLabel.setColor(cc.color(255, 0, 0));
+                // this.addChild(this.endLabel);
 
                 this.state = GameLayer.STATES.END;
             }
@@ -261,7 +267,7 @@ var GameLayer = cc.LayerColor.extend({
             this.scoreLabel.setString("score: " + Math.round(this.time / 10));
             if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
                 this.addObstacle();
-        }
+        },
     })
     ;
 

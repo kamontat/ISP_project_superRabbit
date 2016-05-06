@@ -17,6 +17,7 @@
     "src/Player.js",
     "src/Something.js",
     "src/Item.js",
-    "src/Background.js"
+    "src/Background.js",
+    "src/EndPage.js"
   ]
 }
