@@ -76,12 +76,14 @@ var GameLayer = cc.LayerColor.extend({
 
             // end is mean END
             if (this.state != GameLayer.STATES.END) {
+
                 // out length
                 if (this.player.checkOut()) {
                     this.endGame();
                 }
                 // first player of press pause button
                 if (this.state == GameLayer.STATES.PAUSE) {
+
                     // stop player
                     this.player.stop();
                     // stop item
@@ -121,10 +123,11 @@ var GameLayer = cc.LayerColor.extend({
 
                     // check hit item
                     if (this.player.hit(this.item)) {
-                        cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
+                        cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
                         this.player.life++;
                         this.item.hide();
                     }
+                    
 
                     // update label and color
                     this.lifeLabel.setString(this.player.life);
