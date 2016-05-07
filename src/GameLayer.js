@@ -69,11 +69,6 @@ GameLayer = cc.LayerColor.extend({
             this.somethings[i].scheduleUpdate();
         }
 
-        cc.loader.loadTxt("test.txt", function (err, txt) {
-            HISCORE = txt;
-            console.log(txt.toString());
-        });
-
         return true;
     },
 
