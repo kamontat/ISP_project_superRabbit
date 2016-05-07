@@ -49,13 +49,17 @@ GameLayer = cc.LayerColor.extend({
             this.addChild(this.somethings[i]);
         }
 
-        this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score" + this.player.getScoreFromLocal(), 'Arial', 40);
-        this.highScore.setPosition(new cc.Point(screenWidth / 2, screenHeight - 50));
+        this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score" + this.player.getScoreFromLocal(), 'Arial', 25);
+        this.highScore.setPosition(new cc.Point(screenWidth / 3, screenHeight - 50));
         this.addChild(this.highScore);
 
-        this.playTime = cc.LabelTTF.create(cc.sys.localStorage.getItem("play") == null ? "play: 0" + cc.sys.localStorage.setItem("play", 0) : "play" + cc.sys.localStorage.getItem("play"), 'Arial', 40);
+        this.playTime = cc.LabelTTF.create(cc.sys.localStorage.getItem("play") == null ? "play: 0" : "play: " + cc.sys.localStorage.getItem("play"), 'Arial', 40);
         this.playTime.setPosition(new cc.Point(100, screenHeight - 100));
         this.addChild(this.playTime);
+
+        this.avgScore = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScore") == null ? "avg-score: 0" : "avg-score: " + cc.sys.localStorage.getItem("avgScore"), 'Arial', 25);
+        this.avgScore.setPosition(new cc.Point(2 * screenWidth / 3, screenHeight - 50));
+        this.addChild(this.avgScore);
 
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
@@ -100,6 +104,8 @@ GameLayer = cc.LayerColor.extend({
                 this.player.stop();
                 // stop item
                 this.item.stop();
+                //stop carrot
+                this.carrot.stop();
                 // stop obstacle
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].stop();
@@ -110,6 +116,7 @@ GameLayer = cc.LayerColor.extend({
             if (this.state == GameLayer.STATES.STARTED) {
                 this.player.start();
                 this.item.start();
+                this.carrot.start();
                 this.timer();
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].start();
@@ -147,8 +154,11 @@ GameLayer = cc.LayerColor.extend({
 
                 if (this.player.hitCarot(this.carrot)) {
                     cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
-                    GameLayer.NUMOBJECT - 1;
-                    console.log("num" + GameLayer.NUMOBJECT);
+                    console.log("numObBefore: " + this.somethings.length);
+                    for(var i = 0; i < this.somethings.length; i++) {
+                        this.somethings[i].removeChild(this.somethings[i]);
+                        console.log("numOb: " + this.somethings.length);
+                    }
                     this.carrot.hide();
                 }
 
@@ -182,8 +192,7 @@ GameLayer = cc.LayerColor.extend({
         this.addChild(this.somethings[this.somethings.length - 1]);
         this.somethings[this.somethings.length - 1].scheduleUpdate();
         console.info("Add finish, Have: " + this.somethings.length);
-    }
-    ,
+    },
 
     onKeyDown: function (keyCode) {
         if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left) {
@@ -201,9 +210,15 @@ GameLayer = cc.LayerColor.extend({
         if (keyCode == cc.KEY.d) {
             cc.sys.localStorage.removeItem("play");
             cc.sys.localStorage.removeItem("highScore");
+            cc.sys.localStorage.removeItem("avgScore");
+
+            cc.sys.localStorage.setItem("play");
+            cc.sys.localStorage.setItem("highScore");
+            cc.sys.localStorage.setItem("avgScore");
 
             this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
             this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+            this.avgScore.setString("avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2));
         }
         //press "s" to check all information
         if (keyCode == cc.KEY.s) {
@@ -289,8 +304,26 @@ GameLayer = cc.LayerColor.extend({
         this.player.stop();
         //add score in to local Storage
         this.player.setScoreToLocal();
+
+        //get info from local storage
+        var play = Number(cc.sys.localStorage.getItem("play"));
+        var avg = Number(cc.sys.localStorage.getItem("avgScore"));
+        var score = this.player.score;
+
+        console.log("play: " + play + ", score: " + score + ", avg: " + avg);
+
+        //update player played time
+        cc.sys.localStorage.setItem("play", play + 1);
+        //update avefrage score
+        cc.sys.localStorage.setItem("avgScore", ((avg * play) + score) / (play + 1));
+
         //set high score label
         this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+        //set played time label
+        this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+        //set average score
+        this.avgScore.setString("avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2));
+
         // stop obstacle
         for (var i = 0; i < this.somethings.length; i++) {
             this.somethings[i].stop();
@@ -323,6 +356,7 @@ GameLayer = cc.LayerColor.extend({
 var StartScene = cc.Scene.extend({
         onEnter: function () {
             this._super();
+
             //test local storage
             if (typeof(Storage) === "undefined") {
                 console.error("your browser don't support local storage");
