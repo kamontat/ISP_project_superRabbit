@@ -89,8 +89,15 @@ var Player = cc.Sprite.extend({
     hitItem: function (item) {
         var posPlayer = this.getPosition();
         var posItem = item.getPosition();
-        return ((Math.abs(posPlayer.x - posObstacle.x) <= Player.HALFX) &&
-        (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
+        return ((Math.abs(posPlayer.x - posItem.x) <= Player.HALFX) &&
+        (Math.abs(posPlayer.y - posItem.y) <= Player.HALFX));
+    },
+
+    hitCarot: function (carrot) {
+        var posPlayer = this.getPosition();
+        var posCarrot = carrot.getPosition();
+        return ((Math.abs(posPlayer.x - posCarrot.x) <= Player.HALFX) &&
+        (Math.abs(posPlayer.y - posCarrot.y) <= Player.HALFX));
     },
 
     /**
@@ -105,7 +112,7 @@ var Player = cc.Sprite.extend({
      * set score into localStorage.
      */
     setScoreToLocal: function () {
-        if(this.score > this.getScoreFromLocal() || this.getScoreFromLocal() === null) {
+        if (this.score > this.getScoreFromLocal() || this.getScoreFromLocal() === null) {
             cc.sys.localStorage.setItem("highScore", this.score);
         }
         console.log(cc.sys.localStorage.getItem("highScore"));

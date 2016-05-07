@@ -37,6 +37,12 @@ GameLayer = cc.LayerColor.extend({
         this.addChild(this.item);
         this.item.scheduleUpdate();
 
+        //add carrot
+        this.carrot = new Carrot();
+        this.addChild(this.carrot);
+        this.carrot.scheduleUpdate();
+
+        //add obstacles
         this.somethings = [];
         for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
             this.somethings.push(new Something());
@@ -44,8 +50,12 @@ GameLayer = cc.LayerColor.extend({
         }
 
         this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score" + this.player.getScoreFromLocal(), 'Arial', 40);
-        this.highScore.setPosition(new cc.Point(150, screenHeight - 100));
+        this.highScore.setPosition(new cc.Point(screenWidth / 2, screenHeight - 50));
         this.addChild(this.highScore);
+
+        this.playTime = cc.LabelTTF.create(cc.sys.localStorage.getItem("play") == null ? "play: 0" + cc.sys.localStorage.setItem("play", 0) : "play" + cc.sys.localStorage.getItem("play"), 'Arial', 40);
+        this.playTime.setPosition(new cc.Point(100, screenHeight - 100));
+        this.addChild(this.playTime);
 
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
@@ -127,10 +137,19 @@ GameLayer = cc.LayerColor.extend({
                 }
 
                 // check hit item
-                if (this.player.hit(this.item)) {
-                    cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
+                if (this.player.hitItem(this.item)) {
+                    cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
                     this.player.life++;
                     this.item.hide();
+                }
+
+                // check hit carrot
+
+                if (this.player.hitCarot(this.carrot)) {
+                    cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
+                    GameLayer.NUMOBJECT - 1;
+                    console.log("num" + GameLayer.NUMOBJECT);
+                    this.carrot.hide();
                 }
 
 
@@ -177,10 +196,23 @@ GameLayer = cc.LayerColor.extend({
             }
         }
         // check by key
+
+        //press "d" to delete data in local storage
+        if (keyCode == cc.KEY.d) {
+            cc.sys.localStorage.removeItem("play");
+            cc.sys.localStorage.removeItem("highScore");
+
+            this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+            this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+        }
+        //press "s" to check all information
         if (keyCode == cc.KEY.s) {
             // check state
             if (this.state == GameLayer.STATES.STARTED) {
                 console.info("state: Started");
+                console.info("Number of obstacle" + this.somethings.length);
+                //check obstacle
+                consol.info(this.somethings);
             } else if (this.state == GameLayer.STATES.PAUSE) {
                 console.info("state: Pause");
             } else if (this.state == GameLayer.STATES.DEAD) {
@@ -206,6 +238,9 @@ GameLayer = cc.LayerColor.extend({
         if (this.state == GameLayer.STATES.DEAD) {
             this.state = GameLayer.STATES.PAUSE;
 
+            //update play time label
+            this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+
             // player
             this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
             this.player.start();
@@ -213,8 +248,16 @@ GameLayer = cc.LayerColor.extend({
             this.player.score = 0;
             this.player.life = Player.lIFE;
 
+            //add score in to local Storage
+            this.player.setScoreToLocal();
+            //set high score label
+            this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+
             // item
             this.item.randomPos();
+
+            //carrot
+            this.carrot.randomPos();
 
             // timer
             this.time = 0;
@@ -241,6 +284,7 @@ GameLayer = cc.LayerColor.extend({
     endGame: function () {
         // change state
         this.state = GameLayer.STATES.DEAD;
+
         // stop player
         this.player.stop();
         //add score in to local Storage
@@ -258,6 +302,8 @@ GameLayer = cc.LayerColor.extend({
         cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
 
         if (confirm("Do you want to play again!?")) {
+            // update player time
+            cc.sys.localStorage.setItem("play", Number(cc.sys.localStorage.getItem("play")) + 1);
             this.restart();
         } else {
             this.addChild(this.endPage, 1);
@@ -267,7 +313,8 @@ GameLayer = cc.LayerColor.extend({
 
     timer: function () {
         this.time++;
-        this.scoreLabel.setString("score: " + Math.round(this.time / 10));
+        this.player.addScore(Math.round(this.time / 10));
+        this.scoreLabel.setString("score: " + this.player.score);
         if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
             this.addObstacle();
     }
