@@ -4,272 +4,273 @@
  */
 var HISCORE = 0;
 
-var GameLayer = cc.LayerColor.extend({
+var GameLayer;
+GameLayer = cc.LayerColor.extend({
 
-        init: function () {
-            this._super(new cc.Color(240, 220, 175, 255));
-            this.setPosition(new cc.Point(0, 0));
-            this.state = GameLayer.STATES.PAUSE;
+    init: function () {
+        this._super(new cc.Color(240, 220, 175, 255));
+        this.setPosition(new cc.Point(0, 0));
+        this.state = GameLayer.STATES.PAUSE;
 
-            //add background
-            this.background = new Background();
-            this.background.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-            this.addChild(this.background);
+        //add background
+        this.background = new Background();
+        this.background.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+        this.addChild(this.background);
 
-            this.endPage = new EndPage();
-            this.endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-
-
-            //declare variable for timer
-            this.time = 0;
-            this.numItem = 0;
-
-            // add player in the child
-            this.player = new Player();
-            this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-            this.addChild(this.player, 1);
+        //declare endPage
+        this.endPage = new EndPage();
+        this.endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
 
 
-            //addItem
-            this.item = new Item();
-            this.addChild(this.item);
-            this.item.scheduleUpdate();
+        //declare variable for timer
+        this.time = 0;
+        this.numItem = 0;
 
-            this.somethings = [];
-            for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
-                this.somethings.push(new Something());
-                this.addChild(this.somethings[i]);
+        // add player in the child
+        this.player = new Player();
+        this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+        this.addChild(this.player, 1);
+
+
+        //addItem
+        this.item = new Item();
+        this.addChild(this.item);
+        this.item.scheduleUpdate();
+
+        this.somethings = [];
+        for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
+            this.somethings.push(new Something());
+            this.addChild(this.somethings[i]);
+        }
+
+        this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
+        this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
+        this.addChild(this.scoreLabel);
+
+
+        this.label = cc.LabelTTF.create("Live: ", 'Arial', 40);
+        this.label.setPosition(new cc.Point(screenWidth - 100, screenHeight - 100));
+        this.addChild(this.label);
+
+
+        this.lifeLabel = cc.LabelTTF.create(this.player.life, 'Arial', 40);
+        this.lifeLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
+        this.lifeLabel.setColor(cc.color(0, 0, 255));
+        this.addChild(this.lifeLabel);
+
+        this.addKeyboardHandlers();
+
+        // sound start
+        cc.audioEngine.playMusic('res/Sound/whenPlaySound.mp3', true);
+
+        this.scheduleUpdate();
+        this.player.scheduleUpdate();
+        for (var i = 0; i < this.somethings.length; i++) {
+            this.somethings[i].scheduleUpdate();
+        }
+
+        cc.loader.loadTxt("test.txt", function (err, txt) {
+            HISCORE = txt;
+            console.log(txt.toString());
+        });
+
+        return true;
+    },
+
+    update: function () {
+        setInterval(console.log(this.state), 2000);
+
+        // end is mean END
+        if (this.state != GameLayer.STATES.END) {
+            // out length
+            if (this.player.checkOut()) {
+                this.endGame();
+            }
+            // first player of press pause button
+            if (this.state == GameLayer.STATES.PAUSE) {
+                // stop player
+                this.player.stop();
+                // stop item
+                this.item.stop();
+                // stop obstacle
+                for (var i = 0; i < this.somethings.length; i++) {
+                    this.somethings[i].stop();
+                }
             }
 
-            this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
-            this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
-            this.addChild(this.scoreLabel);
-
-
-            this.label = cc.LabelTTF.create("Live: ", 'Arial', 40);
-            this.label.setPosition(new cc.Point(screenWidth - 100, screenHeight - 100));
-            this.addChild(this.label);
-
-
-            this.lifeLabel = cc.LabelTTF.create(this.player.life, 'Arial', 40);
-            this.lifeLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
-            this.lifeLabel.setColor(cc.color(0, 0, 255));
-            this.addChild(this.lifeLabel);
-
-            this.addKeyboardHandlers();
-
-            // sound start
-            cc.audioEngine.playMusic('res/Sound/whenPlaySound.mp3', true);
-
-            this.scheduleUpdate();
-            this.player.scheduleUpdate();
-            for (var i = 0; i < this.somethings.length; i++) {
-                this.somethings[i].scheduleUpdate();
-            }
-
-            cc.loader.loadTxt("test.txt", function (err, txt) {
-                HISCORE = txt;
-                console.log(txt.toString());
-            });
-
-            return true;
-        },
-
-        update: function () {
-            setInterval(console.log(this.state), 2000);
-
-            // end is mean END
-            if (this.state != GameLayer.STATES.END) {
-
-                // out length
-                if (this.player.checkOut()) {
-                    this.endGame();
-                }
-                // first player of press pause button
-                if (this.state == GameLayer.STATES.PAUSE) {
-
-                    // stop player
-                    this.player.stop();
-                    // stop item
-                    this.item.stop();
-                    // stop obstacle
-                    for (var i = 0; i < this.somethings.length; i++) {
-                        this.somethings[i].stop();
-                    }
+            // Play iT!
+            if (this.state == GameLayer.STATES.STARTED) {
+                this.player.start();
+                this.item.start();
+                this.timer();
+                for (var i = 0; i < this.somethings.length; i++) {
+                    this.somethings[i].start();
                 }
 
-                // Play iT!
-                if (this.state == GameLayer.STATES.STARTED) {
-                    this.player.start();
-                    this.item.start();
-                    this.timer();
-                    for (var i = 0; i < this.somethings.length; i++) {
-                        this.somethings[i].start();
-                    }
+                // check hit obstacles
+                for (var i = 0; i < this.somethings.length; i++) {
+                    if (this.player.hit(this.somethings[i])) {
+                        // random obstacle again
+                        this.somethings[i].randomPosition();
 
-                    // check hit obstacles
-                    for (var i = 0; i < this.somethings.length; i++) {
-                        if (this.player.hit(this.somethings[i])) {
-                            cc.audioEngine.playEffect('res/Sound/whenHitSong.mp3');
-                            // loss life.. another way of if.
-                            if (this.player.lossLive()) {
-                                // set life label
-                                this.lifeLabel.setString(this.player.life);
-                                // end this game
-                                this.endGame()
-                            }
+                        // playing soundEffect
+                        cc.audioEngine.playEffect('res/Sound/whenHitSong.mp3');
+
+                        // loss life.. another way of if.
+                        if (this.player.lossLive()) {
                             // set life label
                             this.lifeLabel.setString(this.player.life);
-                            // random obstacle again
-                            this.somethings[i].randomPosition();
+                            // end this game
+                            this.endGame();
                         }
-                    }
-
-                    // check hit item
-                    if (this.player.hit(this.item)) {
-                        cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
-                        this.player.life++;
-                        this.item.hide();
-                    }
-
-
-                    // update label and color
-                    this.lifeLabel.setString(this.player.life);
-                    if (this.player.life == 2) {
-                        this.lifeLabel.setColor(cc.color(255, 255, 0));
-                    } else if (this.player.life <= 1) {
-                        this.lifeLabel.setColor(cc.color(255, 0, 0));
-                    } else {
-                        this.lifeLabel.setColor(cc.color(0, 0, 255));
+                        // set life label
+                        this.lifeLabel.setString(this.player.life);
                     }
                 }
-            }
-        },
 
-        addKeyboardHandlers: function () {
-            var self = this;
-            cc.eventManager.addListener({
-                event: cc.EventListener.KEYBOARD,
-                onKeyPressed: function (keyCode, event) {
-                    self.onKeyDown(keyCode);
+                // check hit item
+                if (this.player.hit(this.item)) {
+                    cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
+                    this.player.life++;
+                    this.item.hide();
                 }
-            }, this);
-        }
-        ,
 
-        addObstacle: function () {
-            this.somethings.push(new Something);
-            this.addChild(this.somethings[this.somethings.length - 1]);
-            this.somethings[this.somethings.length - 1].scheduleUpdate();
-            console.info("Add finish, Have: " + this.somethings.length);
-        }
-        ,
 
-        onKeyDown: function (keyCode) {
-            if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left) {
-                if (this.state == GameLayer.STATES.PAUSE) {
-                    this.state = GameLayer.STATES.STARTED;
-                    this.player.start();
-                }
-                if (this.state == GameLayer.STATES.STARTED) {
-                    this.player.jump(keyCode);
+                // update label and color
+                this.lifeLabel.setString(this.player.life);
+                if (this.player.life == 2) {
+                    this.lifeLabel.setColor(cc.color(255, 255, 0));
+                } else if (this.player.life <= 1) {
+                    this.lifeLabel.setColor(cc.color(255, 0, 0));
+                } else {
+                    this.lifeLabel.setColor(cc.color(0, 0, 255));
                 }
             }
-            // check by key
-            if (keyCode == cc.KEY.s) {
-                // check state
-                if (this.state == GameLayer.STATES.STARTED) {
-                    console.info("state: Started");
-                } else if (this.state == GameLayer.STATES.PAUSE) {
-                    console.info("state: Pause");
-                } else if (this.state == GameLayer.STATES.DEAD) {
-                    console.info("state: Dead");
-                } else if (this.state == GameLayer.STATES.END) {
-                    console.info("state: End");
-                }
-                // check player started
-                console.info("Start Player: " + this.player.started);
-                // check obstacle started
-                this.somethings.forEach(function (something) {
-                    console.info("Start Obstacle: " + something.started);
-                }, this);
-                // check num obstacle
-                console.info("Number of obstacle: " + this.somethings.length);
-                // check obstacle
-                console.info(this.somethings);
-            }
         }
-        ,
+    },
 
-        restart: function () {
-            if (this.state == GameLayer.STATES.DEAD) {
-                this.state = GameLayer.STATES.PAUSE;
+    addKeyboardHandlers: function () {
+        var self = this;
+        cc.eventManager.addListener({
+            event: cc.EventListener.KEYBOARD,
+            onKeyPressed: function (keyCode, event) {
+                self.onKeyDown(keyCode);
+            }
+        }, this);
+    }
+    ,
 
-                // player
-                this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+    addObstacle: function () {
+        this.somethings.push(new Something);
+        this.addChild(this.somethings[this.somethings.length - 1]);
+        this.somethings[this.somethings.length - 1].scheduleUpdate();
+        console.info("Add finish, Have: " + this.somethings.length);
+    }
+    ,
+
+    onKeyDown: function (keyCode) {
+        if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left) {
+            if (this.state == GameLayer.STATES.PAUSE) {
+                this.state = GameLayer.STATES.STARTED;
                 this.player.start();
-                this.player.jump();
-                this.player.score = 0;
-                this.player.life = Player.lIFE;
-
-                // item
-                this.item.randomPos();
-
-                // timer
-                this.time = 0;
-                this.scoreLabel.setString("score: 0");
-
-                // remove obstacle
-                for (var i = 0; i < this.somethings.length; i++) {
-                    this.removeChild(this.somethings[i], true);
-                }
-                // clear array
-                this.somethings.splice(0, this.somethings.length);
-
-                // add new object
-                for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
-                    this.addObstacle();
-                }
-                console.log("Debug2: " + this.state);
-            } else {
-                console.error("You not DEAD!");
+            }
+            if (this.state == GameLayer.STATES.STARTED) {
+                this.player.jump(keyCode);
             }
         }
-        ,
+        // check by key
+        if (keyCode == cc.KEY.s) {
+            // check state
+            if (this.state == GameLayer.STATES.STARTED) {
+                console.info("state: Started");
+            } else if (this.state == GameLayer.STATES.PAUSE) {
+                console.info("state: Pause");
+            } else if (this.state == GameLayer.STATES.DEAD) {
+                console.info("state: Dead");
+            } else if (this.state == GameLayer.STATES.END) {
+                console.info("state: End");
+            }
+            // check player started
+            console.info("Start Player: " + this.player.started);
+            // check obstacle started
+            this.somethings.forEach(function (something) {
+                console.info("Start Obstacle: " + something.started);
+            }, this);
+            // check num obstacle
+            console.info("Number of obstacle: " + this.somethings.length);
+            // check obstacle
+            console.info(this.somethings);
+        }
+    }
+    ,
 
-        endGame: function () {
-            // change state
-            this.state = GameLayer.STATES.DEAD;
-            // stop player
-            this.player.stop();
-            // stop obstacle
+    restart: function () {
+        if (this.state == GameLayer.STATES.DEAD) {
+            this.state = GameLayer.STATES.PAUSE;
+
+            // player
+            this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+            this.player.start();
+            this.player.jump();
+            this.player.score = 0;
+            this.player.life = Player.lIFE;
+
+            // item
+            this.item.randomPos();
+
+            // timer
+            this.time = 0;
+            this.scoreLabel.setString("score: 0");
+
+            // remove obstacle
             for (var i = 0; i < this.somethings.length; i++) {
-                this.somethings[i].stop();
+                this.removeChild(this.somethings[i], true);
             }
+            // clear array
+            this.somethings.splice(0, this.somethings.length);
 
-            if (confirm("Do you want to play again!?")) {
-                this.restart();
-            } else {
-
-                this.addChild(this.endPage, 1);
-                // this.endLabel = cc.LabelTTF.create("GAME IS END", 'Arial', 100);
-                // this.endLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-                // this.endLabel.setColor(cc.color(255, 0, 0));
-                // this.addChild(this.endLabel);
-
-                this.state = GameLayer.STATES.END;
-            }
-        }
-        ,
-
-        timer: function () {
-            this.time++;
-            this.scoreLabel.setString("score: " + Math.round(this.time / 10));
-            if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
+            // add new object
+            for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
                 this.addObstacle();
-        },
-    })
-    ;
+            }
+            console.log("Debug2: " + this.state);
+        } else {
+            console.error("You not DEAD!");
+        }
+    }
+    ,
+
+    endGame: function () {
+        // change state
+        this.state = GameLayer.STATES.DEAD;
+        // stop player
+        this.player.stop();
+        // stop obstacle
+        for (var i = 0; i < this.somethings.length; i++) {
+            this.somethings[i].stop();
+        }
+        //end background music
+        cc.audioEngine.end();
+
+        //playing new music
+                cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
+
+        if (confirm("Do you want to play again!?")) {
+            this.restart();
+        } else {
+            this.addChild(this.endPage, 1);
+            this.state = GameLayer.STATES.END;
+        }
+    }
+    ,
+
+    timer: function () {
+        this.time++;
+        this.scoreLabel.setString("score: " + Math.round(this.time / 10));
+        if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
+            this.addObstacle();
+    },
+});
 
 var StartScene = cc.Scene.extend({
     onEnter: function () {
