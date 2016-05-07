@@ -43,6 +43,10 @@ GameLayer = cc.LayerColor.extend({
             this.addChild(this.somethings[i]);
         }
 
+        this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score" + this.player.getScoreFromLocal(), 'Arial', 40);
+        this.highScore.setPosition(new cc.Point(150, screenHeight - 100));
+        this.addChild(this.highScore);
+
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
         this.addChild(this.scoreLabel);
@@ -239,6 +243,10 @@ GameLayer = cc.LayerColor.extend({
         this.state = GameLayer.STATES.DEAD;
         // stop player
         this.player.stop();
+        //add score in to local Storage
+        this.player.setScoreToLocal();
+        //set high score label
+        this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
         // stop obstacle
         for (var i = 0; i < this.somethings.length; i++) {
             this.somethings[i].stop();
@@ -268,11 +276,15 @@ GameLayer = cc.LayerColor.extend({
 var StartScene = cc.Scene.extend({
         onEnter: function () {
             this._super();
-            var scene = new GameLayer();
-            scene.init();
-            this.addChild(scene);
-            console.log("GameLayer created");
-
+            //test local storage
+            if (typeof(Storage) === "undefined") {
+                console.error("your browser don't support local storage");
+            } else {
+                var layer = new GameLayer();
+                layer.init();
+                this.addChild(layer);
+                console.log("GameLayer created");
+            }
         }
     })
     ;

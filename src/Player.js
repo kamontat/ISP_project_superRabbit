@@ -105,7 +105,10 @@ var Player = cc.Sprite.extend({
      * set score into localStorage.
      */
     setScoreToLocal: function () {
-        cc.sys.localStorage.setItem("highScore", this.score);
+        if(this.score > this.getScoreFromLocal() || this.getScoreFromLocal() === null) {
+            cc.sys.localStorage.setItem("highScore", this.score);
+        }
+        console.log(cc.sys.localStorage.getItem("highScore"));
     },
 
     /**
@@ -131,8 +134,8 @@ var Player = cc.Sprite.extend({
 });
 
 // radius picture
-Player.HALFX = 32;
-Player.HALFY = 32;
+Player.HALFX = 24;
+Player.HALFY = 24;
 
 Player.lIFE = 5;
 
