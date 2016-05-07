@@ -73,7 +73,6 @@ GameLayer = cc.LayerColor.extend({
     },
 
     update: function () {
-        setInterval(console.log(this.state), 2000);
 
         // end is mean END
         if (this.state != GameLayer.STATES.END) {
@@ -248,7 +247,7 @@ GameLayer = cc.LayerColor.extend({
         cc.audioEngine.end();
 
         //playing new music
-                cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
+        cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
 
         if (confirm("Do you want to play again!?")) {
             this.restart();
@@ -256,26 +255,27 @@ GameLayer = cc.LayerColor.extend({
             this.addChild(this.endPage, 1);
             this.state = GameLayer.STATES.END;
         }
-    }
-    ,
+    },
 
     timer: function () {
         this.time++;
         this.scoreLabel.setString("score: " + Math.round(this.time / 10));
         if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
             this.addObstacle();
-    },
+    }
 });
 
 var StartScene = cc.Scene.extend({
-    onEnter: function () {
-        this._super();
-        var layer = new GameLayer();
-        layer.init();
-        this.addChild(layer);
-        console.log("GameLayer created");
-    }
-});
+        onEnter: function () {
+            this._super();
+            var scene = new GameLayer();
+            scene.init();
+            this.addChild(scene);
+            console.log("GameLayer created");
+
+        }
+    })
+    ;
 
 GameLayer.NUMOBJECT = 4;
 

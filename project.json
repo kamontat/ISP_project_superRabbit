@@ -18,7 +18,6 @@
     "src/Something.js",
     "src/Item.js",
     "src/Background.js",
-    "src/EndPage.js",
-    "src/IntroPage.js"
+    "src/EndPage.js"
   ]
 }
