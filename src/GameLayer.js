@@ -141,14 +141,14 @@ GameLayer = cc.LayerColor.extend({
                 }
 
                 // check hit item
-                if (this.player.hit(this.item, 20, 20)) {
+                if (this.player.hit(this.item, 24, 24)) {
                     cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
                     this.player.life++;
                     this.item.hide();
                 }
 
                 // check hit carrot
-                if (this.player.hit(this.carrot, 10, 35)) {
+                if (this.player.hit(this.carrot, 24, 35)) {
                     cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
                     this.removeObstacle();
                     this.carrot.hide();
@@ -338,7 +338,7 @@ GameLayer = cc.LayerColor.extend({
         //mute background music
         cc.audioEngine.setMusicVolume(0);
 
-        if (confirm("Do you want to play again!?")) {
+        if (confirm("Do you want to play again (lv. " + this.somethings.length + ") !?")) {
             // un mute the music sound
             cc.audioEngine.setMusicVolume(1);
             this.restart();
