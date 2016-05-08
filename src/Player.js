@@ -30,9 +30,20 @@ var Player = cc.Sprite.extend({
     },
 
     autoJump: function () {
-        var pos = this.getPosition();
-        if (pos.y < screenHeight / 2) {
-            this.jump(cc.KEY.up);
+        var action = [cc.KEY.up, cc.KEY.down, cc.KEY.left, cc.KEY.right];
+        var rand = Math.floor(Math.random() * 4);
+        this.jump(action[rand]);
+        if (this.getPosition().x < 75) {
+            this.jump(action[3]);
+        }
+        if (this.getPosition().x > screenWidth - 75) {
+            this.jump(action[2]);
+        }
+        if (this.getPosition().y < 75) {
+            this.jump(action[0]);
+        }
+        if (this.getPosition().y > screenHeight - 75) {
+            this.jump(action[1]);
         }
     },
 

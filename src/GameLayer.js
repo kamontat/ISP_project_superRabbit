@@ -207,12 +207,14 @@ GameLayer = cc.LayerColor.extend({
 
         // auto play
         if (keyCode == cc.KEY.p) {
-            this.player.schedule(this.player.autoJump, 0);
+            this.player.schedule(this.player.autoJump, 0.1);
+            console.warn("auto play: Turn ON");
         }
 
         // manual play
         if (keyCode == cc.KEY.o) {
             this.player.unschedule(this.player.autoJump);
+            console.warn("auto play: Turn OFF");
         }
 
         //press "m" to mute the sound
