@@ -24,10 +24,6 @@ GameLayer = cc.LayerColor.extend({
         this.background.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
         this.addChild(this.background);
 
-        //declare endPage
-        this.endPage = new EndPage();
-        this.endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-
         // add player in the child
         this.player = new Player();
         this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
@@ -51,7 +47,7 @@ GameLayer = cc.LayerColor.extend({
         }
 
 
-        this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score" + this.player.getScoreFromLocal(), 'Arial', 25);
+        this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score: " + this.player.getScoreFromLocal(), 'Arial', 25);
         this.highScore.setPosition(new cc.Point(screenWidth / 3, screenHeight - 50));
         this.addChild(this.highScore);
 
@@ -59,7 +55,7 @@ GameLayer = cc.LayerColor.extend({
         this.playTime.setPosition(new cc.Point(100, screenHeight - 100));
         this.addChild(this.playTime);
 
-        this.avgScore = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScore") == null ? "avg-score: 0" : "avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2), 'Arial', 25);
+        this.avgScore = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScore") == null ? "avg-score: 0" : "avg-score: " + cc.sys.localStorage.getItem("avgScore"), 'Arial', 25);
         this.avgScore.setPosition(new cc.Point(2 * screenWidth / 3, screenHeight - 50));
         this.addChild(this.avgScore);
 
@@ -206,7 +202,7 @@ GameLayer = cc.LayerColor.extend({
 
             this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
             this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
-            this.avgScore.setString("avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2));
+            this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
         }
 
         //press "m" to mute the sound
@@ -318,7 +314,7 @@ GameLayer = cc.LayerColor.extend({
 
         //get info from local storage
         var play = Number(cc.sys.localStorage.getItem("play"));
-        var avg = Number(cc.sys.localStorage.getItem("avgScore"));
+        var avg = cc.sys.localStorage.getItem("avgScore");
         var score = this.player.score;
 
         console.log("play: " + play + ", score: " + score + ", avg: " + avg);
@@ -326,14 +322,14 @@ GameLayer = cc.LayerColor.extend({
         //update player played time
         cc.sys.localStorage.setItem("play", play + 1);
         //update average score
-        cc.sys.localStorage.setItem("avgScore", ((avg * play) + score) / (play + 1));
+        cc.sys.localStorage.setItem("avgScore", (((avg * play) + score) / (play + 1)).toFixed(2));
 
         //set high score label
         this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
         //set played time label
         this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
         //set average score
-        this.avgScore.setString("avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2));
+        this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
 
         // stop obstacle
         for (var i = 0; i < this.somethings.length; i++) {
@@ -347,9 +343,15 @@ GameLayer = cc.LayerColor.extend({
             cc.audioEngine.setMusicVolume(1);
             this.restart();
         } else {
+            // end sound
             cc.audioEngine.end();
 
-            this.addChild(this.endPage, 1);
+            // open end page
+            var endPage = new EndPage();
+            endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+            this.addChild(endPage);
+
+            // change status
             this.state = GameLayer.STATES.END;
 
             //playing end music
