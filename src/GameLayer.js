@@ -57,7 +57,7 @@ GameLayer = cc.LayerColor.extend({
         this.playTime.setPosition(new cc.Point(100, screenHeight - 100));
         this.addChild(this.playTime);
 
-        this.avgScore = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScore") == null ? "avg-score: 0" : "avg-score: " + cc.sys.localStorage.getItem("avgScore"), 'Arial', 25);
+        this.avgScore = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScore") == null ? "avg-score: 0" : "avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2), 'Arial', 25);
         this.avgScore.setPosition(new cc.Point(2 * screenWidth / 3, screenHeight - 50));
         this.addChild(this.avgScore);
 
@@ -181,20 +181,6 @@ GameLayer = cc.LayerColor.extend({
         }, this);
     },
 
-    addObstacle: function () {
-        this.somethings.push(new Something);
-        this.addChild(this.somethings[this.somethings.length - 1]);
-        this.somethings[this.somethings.length - 1].scheduleUpdate();
-        console.info("Add finish, Have: " + this.somethings.length);
-    },
-
-    removeObstacle: function () {
-        this.somethings[this.somethings.length - 1].unschedule();
-        this.removeChild(this.somethings[this.somethings.length - 1], true);
-        this.somethings.pop();
-        console.log(this.somethings.length);
-    },
-
     onKeyDown: function (keyCode) {
         if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left) {
             if (this.state == GameLayer.STATES.PAUSE) {
@@ -221,6 +207,12 @@ GameLayer = cc.LayerColor.extend({
             this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
             this.avgScore.setString("avg-score: " + Number(cc.sys.localStorage.getItem("avgScore")).toFixed(2));
         }
+
+        //press "m" to mute the sound
+        if (keyCode == cc.KEY.m) {
+            cc.audioEngine.end();
+        }
+
         //press "s" to check all information
         if (keyCode == cc.KEY.s) {
             // check state
@@ -247,6 +239,20 @@ GameLayer = cc.LayerColor.extend({
             // check obstacle
             console.info(this.somethings);
         }
+    },
+
+    addObstacle: function () {
+        this.somethings.push(new Something);
+        this.addChild(this.somethings[this.somethings.length - 1]);
+        this.somethings[this.somethings.length - 1].scheduleUpdate();
+        console.info("Add finish, Have: " + this.somethings.length);
+    },
+
+    removeObstacle: function () {
+        this.somethings[this.somethings.length - 1].unschedule();
+        this.removeChild(this.somethings[this.somethings.length - 1], true);
+        this.somethings.pop();
+        console.info("Remove finish, Have: " + this.somethings.length);
     },
 
     restart: function () {
