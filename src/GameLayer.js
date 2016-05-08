@@ -11,6 +11,7 @@ GameLayer = cc.LayerColor.extend({
         this._super(new cc.Color(240, 220, 175, 255));
         this.setPosition(new cc.Point(0, 0));
         this.state = GameLayer.STATES.PAUSE;
+        this.sound = true;
 
         //add background
         this.background = new Background();
@@ -210,7 +211,15 @@ GameLayer = cc.LayerColor.extend({
 
         //press "m" to mute the sound
         if (keyCode == cc.KEY.m) {
-            cc.audioEngine.end();
+            if (this.sound) {
+                cc.audioEngine.setMusicVolume(0);
+                cc.audioEngine.setEffectsVolume(0);
+                this.sound = false;
+            } else {
+                cc.audioEngine.setMusicVolume(1);
+                cc.audioEngine.setEffectsVolume(1);
+                this.sound = true;
+            }
         }
 
         //press "s" to check all information
