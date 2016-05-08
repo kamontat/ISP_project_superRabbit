@@ -229,7 +229,7 @@ GameLayer = cc.LayerColor.extend({
                 console.info("state: Started");
                 console.info("Number of obstacle" + this.somethings.length);
                 //check obstacle
-                consol.info(this.somethings);
+                console.info(this.somethings);
             } else if (this.state == GameLayer.STATES.PAUSE) {
                 console.info("state: Pause");
             } else if (this.state == GameLayer.STATES.DEAD) {
