@@ -244,6 +244,9 @@ GameLayer = cc.LayerColor.extend({
                 console.info("state: End");
             }
 
+            // game info
+            console.info(this.sound ? "Music: ON" : "Music: OFF");
+
             // check player started
             console.info("Start Player: " + this.player.started);
             // check obstacle started
@@ -350,11 +353,13 @@ GameLayer = cc.LayerColor.extend({
         }
         //mute background music
         cc.audioEngine.setMusicVolume(0);
+        cc.audioEngine.setEffectsVolume(0);
 
         if (confirm("Do you want to play again (lv. " + this.somethings.length + ") !?")) {
             // un mute the music sound
             this.sound = true;
             cc.audioEngine.setMusicVolume(1);
+            cc.audioEngine.setEffectsVolume(1);
 
             this.restart();
         } else {
@@ -364,7 +369,7 @@ GameLayer = cc.LayerColor.extend({
             // open end page
             var endPage = new EndPage();
             endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-            this.addChild(endPage);
+            this.addChild(endPage, 1);
 
             // change status
             this.state = GameLayer.STATES.END;
@@ -401,7 +406,7 @@ var StartScene = cc.Scene.extend({
     })
     ;
 
-GameLayer.NUMOBJECT = 4;
+GameLayer.NUMOBJECT = 3;
 
 GameLayer.STATES = {
     PAUSE: 1,
