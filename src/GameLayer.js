@@ -227,9 +227,6 @@ GameLayer = cc.LayerColor.extend({
             // check state
             if (this.state == GameLayer.STATES.STARTED) {
                 console.info("state: Started");
-                console.info("Number of obstacle" + this.somethings.length);
-                //check obstacle
-                console.info(this.somethings);
             } else if (this.state == GameLayer.STATES.PAUSE) {
                 console.info("state: Pause");
             } else if (this.state == GameLayer.STATES.DEAD) {
@@ -237,16 +234,16 @@ GameLayer = cc.LayerColor.extend({
             } else if (this.state == GameLayer.STATES.END) {
                 console.info("state: End");
             }
+
             // check player started
             console.info("Start Player: " + this.player.started);
             // check obstacle started
             this.somethings.forEach(function (something) {
                 console.info("Start Obstacle: " + something.started);
             }, this);
+
             // check num obstacle
             console.info("Number of obstacle: " + this.somethings.length);
-            // check obstacle
-            console.info(this.somethings);
         }
     },
 
