@@ -32,8 +32,7 @@ var Carrot = cc.Sprite.extend({
             this.time++;
             if (this.started) {
                 // every 3 second
-                if (this.time / 60 % Item.SECOND_TO_APPEAR == 0) {
-                    console.log(this.time / 60);
+                if (this.time / 60 % Carrot.SECOND_TO_APPEAR == 0) {
                     if (this.appear) {
                         this.hide();
                     } else {
@@ -61,4 +60,4 @@ var Carrot = cc.Sprite.extend({
     }
 );
 
-Item.SECOND_TO_APPEAR = 3;
+Carrot.SECOND_TO_APPEAR = 3;

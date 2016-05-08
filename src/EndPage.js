@@ -3,7 +3,7 @@
  */
 
 var EndPage = cc.Sprite.extend({
-    ctor: function() {
+    ctor: function () {
         this._super();
         this.initWithFile("res/Images/endPage.jpg");
     }

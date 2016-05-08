@@ -11,7 +11,13 @@ GameLayer = cc.LayerColor.extend({
         this._super(new cc.Color(240, 220, 175, 255));
         this.setPosition(new cc.Point(0, 0));
         this.state = GameLayer.STATES.PAUSE;
+
+        // declare sound variable
         this.sound = true;
+
+        //declare variable for timer
+        this.time = 0;
+        this.numItem = 0;
 
         //add background
         this.background = new Background();
@@ -22,16 +28,10 @@ GameLayer = cc.LayerColor.extend({
         this.endPage = new EndPage();
         this.endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
 
-
-        //declare variable for timer
-        this.time = 0;
-        this.numItem = 0;
-
         // add player in the child
         this.player = new Player();
         this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
         this.addChild(this.player, 1);
-
 
         //addItem
         this.item = new Item();
@@ -50,6 +50,7 @@ GameLayer = cc.LayerColor.extend({
             this.addChild(this.somethings[i]);
         }
 
+
         this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score" + this.player.getScoreFromLocal(), 'Arial', 25);
         this.highScore.setPosition(new cc.Point(screenWidth / 3, screenHeight - 50));
         this.addChild(this.highScore);
@@ -66,16 +67,15 @@ GameLayer = cc.LayerColor.extend({
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
         this.addChild(this.scoreLabel);
 
-
         this.label = cc.LabelTTF.create("Live: ", 'Arial', 40);
         this.label.setPosition(new cc.Point(screenWidth - 100, screenHeight - 100));
         this.addChild(this.label);
-
 
         this.lifeLabel = cc.LabelTTF.create(this.player.life, 'Arial', 40);
         this.lifeLabel.setPosition(new cc.Point(screenWidth - 40, screenHeight - 100));
         this.lifeLabel.setColor(cc.color(0, 0, 255));
         this.addChild(this.lifeLabel);
+
 
         this.addKeyboardHandlers();
 
@@ -325,7 +325,7 @@ GameLayer = cc.LayerColor.extend({
 
         //update player played time
         cc.sys.localStorage.setItem("play", play + 1);
-        //update avefrage score
+        //update average score
         cc.sys.localStorage.setItem("avgScore", ((avg * play) + score) / (play + 1));
 
         //set high score label
@@ -339,15 +339,18 @@ GameLayer = cc.LayerColor.extend({
         for (var i = 0; i < this.somethings.length; i++) {
             this.somethings[i].stop();
         }
-        //end background music
-        cc.audioEngine.end();
-
-        //playing new music
-        cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
+        //mute background music
+        cc.audioEngine.setMusicVolume(0);
 
         if (confirm("Do you want to play again!?")) {
+            // un mute the music sound
+            cc.audioEngine.setMusicVolume(1);
             this.restart();
         } else {
+            cc.audioEngine.end();
+            //playing end music
+            cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
+
             this.addChild(this.endPage, 1);
             this.state = GameLayer.STATES.END;
         }

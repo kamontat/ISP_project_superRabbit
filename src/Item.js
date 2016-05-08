@@ -19,7 +19,6 @@ var Item = cc.Sprite.extend({
 
         hide: function () {
             this.setPosition(new cc.Point(-99, -99));
-
             this.time = 0;
             this.appear = false;
         },
@@ -29,7 +28,6 @@ var Item = cc.Sprite.extend({
             if (this.started) {
                 // every 5 second
                 if (this.time / 60 % Item.SECOND_TO_APPEAR == 0) {
-                    console.log(this.time / 60);
                     if (this.appear) {
                         this.hide();
                     } else {
