@@ -74,30 +74,16 @@ var Player = cc.Sprite.extend({
     },
 
     /**
-     * check player hit with some obstacle
+     * check player hit with some obstacle with sizeX, sizeY
      * @param obstacle some object to check hit or not
      * @returns {boolean}
      */
-    hit: function (obstacle) {
+    hit: function (obstacle, sizeX, sizeY) {
         var posPlayer = this.getPosition();
         var posObstacle = obstacle.getPosition();
 
-        return ((Math.abs(posPlayer.x - posObstacle.x) <= Player.HALFX) &&
-        (Math.abs(posPlayer.y - posObstacle.y) <= Player.HALFX));
-    },
-
-    hitItem: function (item) {
-        var posPlayer = this.getPosition();
-        var posItem = item.getPosition();
-        return ((Math.abs(posPlayer.x - posItem.x) <= Player.HALFX) &&
-        (Math.abs(posPlayer.y - posItem.y) <= Player.HALFX));
-    },
-
-    hitCarot: function (carrot) {
-        var posPlayer = this.getPosition();
-        var posCarrot = carrot.getPosition();
-        return ((Math.abs(posPlayer.x - posCarrot.x) <= Player.HALFX) &&
-        (Math.abs(posPlayer.y - posCarrot.y) <= Player.HALFX));
+        return ((Math.abs(posPlayer.x - posObstacle.x) <= sizeX) &&
+        (Math.abs(posPlayer.y - posObstacle.y) <= sizeY));
     },
 
     /**
@@ -139,10 +125,6 @@ var Player = cc.Sprite.extend({
         this.started = false;
     }
 });
-
-// radius picture
-Player.HALFX = 24;
-Player.HALFY = 24;
 
 Player.lIFE = 5;
 

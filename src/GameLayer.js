@@ -124,7 +124,7 @@ GameLayer = cc.LayerColor.extend({
 
                 // check hit obstacles
                 for (var i = 0; i < this.somethings.length; i++) {
-                    if (this.player.hit(this.somethings[i])) {
+                    if (this.player.hit(this.somethings[i], 24, 24)) {
                         // random obstacle again
                         this.somethings[i].randomPosition();
 
@@ -144,21 +144,16 @@ GameLayer = cc.LayerColor.extend({
                 }
 
                 // check hit item
-                if (this.player.hitItem(this.item)) {
+                if (this.player.hit(this.item, 20, 20)) {
                     cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
                     this.player.life++;
                     this.item.hide();
                 }
 
                 // check hit carrot
-
-                if (this.player.hitCarot(this.carrot)) {
+                if (this.player.hit(this.carrot, 10, 35)) {
                     cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
-                    console.log("numObBefore: " + this.somethings.length);
-                    for (var i = 0; i < this.somethings.length; i++) {
-                        this.somethings[i].removeChild(this.somethings[i]);
-                        console.log("numOb: " + this.somethings.length);
-                    }
+                    this.removeObstacle();
                     this.carrot.hide();
                 }
 
@@ -184,14 +179,20 @@ GameLayer = cc.LayerColor.extend({
                 self.onKeyDown(keyCode);
             }
         }, this);
-    }
-    ,
+    },
 
     addObstacle: function () {
         this.somethings.push(new Something);
         this.addChild(this.somethings[this.somethings.length - 1]);
         this.somethings[this.somethings.length - 1].scheduleUpdate();
         console.info("Add finish, Have: " + this.somethings.length);
+    },
+
+    removeObstacle: function () {
+        this.somethings[this.somethings.length - 1].unschedule();
+        this.removeChild(this.somethings[this.somethings.length - 1], true);
+        this.somethings.pop();
+        console.log(this.somethings.length);
     },
 
     onKeyDown: function (keyCode) {
@@ -246,8 +247,7 @@ GameLayer = cc.LayerColor.extend({
             // check obstacle
             console.info(this.somethings);
         }
-    }
-    ,
+    },
 
     restart: function () {
         if (this.state == GameLayer.STATES.DEAD) {
