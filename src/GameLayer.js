@@ -205,6 +205,16 @@ GameLayer = cc.LayerColor.extend({
             this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
         }
 
+        // auto play
+        if (keyCode == cc.KEY.p) {
+            this.player.schedule(this.player.autoJump, 0);
+        }
+
+        // manual play
+        if (keyCode == cc.KEY.o) {
+            this.player.unschedule(this.player.autoJump);
+        }
+
         //press "m" to mute the sound
         if (keyCode == cc.KEY.m) {
             if (this.sound) {

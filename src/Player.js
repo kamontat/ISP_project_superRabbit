@@ -29,6 +29,13 @@ var Player = cc.Sprite.extend({
         }
     },
 
+    autoJump: function () {
+        var pos = this.getPosition();
+        if (pos.y < screenHeight / 2) {
+            this.jump(cc.KEY.up);
+        }
+    },
+
     /**
      * when loss life<br>
      *     @function will check if life is zero it will return true
