@@ -207,7 +207,7 @@ GameLayer = cc.LayerColor.extend({
 
         // auto play
         if (keyCode == cc.KEY.p) {
-            this.player.schedule(this.player.autoJump, 0.1);
+            this.player.schedule(this.player.autoJump, 0.15);
             console.warn("auto play: Turn ON");
         }
 
@@ -228,6 +228,7 @@ GameLayer = cc.LayerColor.extend({
                 cc.audioEngine.setEffectsVolume(1);
                 this.sound = true;
             }
+            console.info("Mute Sound: " + !this.sound);
         }
 
         //press "s" to check all information
@@ -352,7 +353,9 @@ GameLayer = cc.LayerColor.extend({
 
         if (confirm("Do you want to play again (lv. " + this.somethings.length + ") !?")) {
             // un mute the music sound
+            this.sound = true;
             cc.audioEngine.setMusicVolume(1);
+
             this.restart();
         } else {
             // end sound

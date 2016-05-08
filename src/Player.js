@@ -39,7 +39,7 @@ var Player = cc.Sprite.extend({
         if (this.getPosition().x > screenWidth - 75) {
             this.jump(action[2]);
         }
-        if (this.getPosition().y < 75) {
+        if (this.getPosition().y < 150) {
             this.jump(action[0]);
         }
         if (this.getPosition().y > screenHeight - 75) {
