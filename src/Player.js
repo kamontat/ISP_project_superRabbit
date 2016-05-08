@@ -101,8 +101,8 @@ var Player = cc.Sprite.extend({
     },
 
     /**
-     * add score to localStorage.
-     * @param score is score of plyer.
+     * add score to this score.
+     * @param score is score of player.
      */
     addScore: function (score) {
         this.score = score;
