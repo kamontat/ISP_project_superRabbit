@@ -348,11 +348,13 @@ GameLayer = cc.LayerColor.extend({
             this.restart();
         } else {
             cc.audioEngine.end();
-            //playing end music
-            cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
 
             this.addChild(this.endPage, 1);
             this.state = GameLayer.STATES.END;
+
+            //playing end music
+            cc.audioEngine.setMusicVolume(1);
+            cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
         }
     },
 
