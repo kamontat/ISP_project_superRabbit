@@ -2,7 +2,6 @@
  * @author "Soraya Saenna"
  * @version 1.5.0
  */
-var HISCORE = 0;
 
 var GameLayer;
 GameLayer = cc.LayerColor.extend({
@@ -384,7 +383,7 @@ GameLayer = cc.LayerColor.extend({
 
     timer: function () {
         this.time++;
-        this.player.addScore(Math.round(this.time / 10));
+        this.player.addScore(Math.round((this.time / 10)));
         this.scoreLabel.setString("score: " + this.player.score);
         if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
             this.addObstacle();
@@ -408,7 +407,7 @@ var StartScene = cc.Scene.extend({
     })
     ;
 
-GameLayer.NUMOBJECT = 3;
+GameLayer.NUMOBJECT = 4;
 
 GameLayer.STATES = {
     PAUSE: 1,
