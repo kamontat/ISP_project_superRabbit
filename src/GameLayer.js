@@ -354,8 +354,6 @@ GameLayer = cc.LayerColor.extend({
         var avg = cc.sys.localStorage.getItem("avgScore");
         var score = this.player.score;
 
-        console.log("play: " + play + ", score: " + score + ", avg: " + avg);
-
         //update player played time
         cc.sys.localStorage.setItem("play", play + 1);
         //update average score
