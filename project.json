@@ -14,7 +14,7 @@
     "src/resource.js",
     "src/GameLayer.js",
     "src/Player.js",
-    "src/Something.js",
+    "src/Obstacle.js",
     "src/Item.js",
     "src/Background.js",
     "src/EndPage.js",

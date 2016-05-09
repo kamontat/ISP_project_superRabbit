@@ -40,10 +40,10 @@ GameLayer = cc.LayerColor.extend({
         this.carrot.scheduleUpdate();
 
         //add obstacles
-        this.somethings = [];
+        this.obstacles = [];
         for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
-            this.somethings.push(new Something());
-            this.addChild(this.somethings[i]);
+            this.obstacles.push(new Obstacle());
+            this.addChild(this.obstacles[i]);
         }
 
         this.levelLabel = cc.LabelTTF.create("LV: " + this.convertLV(), 'Arial', 25);
@@ -66,7 +66,7 @@ GameLayer = cc.LayerColor.extend({
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
         this.addChild(this.scoreLabel);
 
-        this.label = cc.LabelTTF.create("Live: ", 'Arial', 40);
+        this.label = cc.LabelTTF.create("Life: ", 'Arial', 40);
         this.label.setPosition(new cc.Point(screenWidth - 100, screenHeight - 100));
         this.addChild(this.label);
 
@@ -83,8 +83,8 @@ GameLayer = cc.LayerColor.extend({
 
         this.scheduleUpdate();
         this.player.scheduleUpdate();
-        for (var i = 0; i < this.somethings.length; i++) {
-            this.somethings[i].scheduleUpdate();
+        for (var i = 0; i < this.obstacles.length; i++) {
+            this.obstacles[i].scheduleUpdate();
         }
 
         return true;
@@ -106,8 +106,8 @@ GameLayer = cc.LayerColor.extend({
                 //stop carrot
                 this.carrot.stop();
                 // stop obstacle
-                for (var i = 0; i < this.somethings.length; i++) {
-                    this.somethings[i].stop();
+                for (var i = 0; i < this.obstacles.length; i++) {
+                    this.obstacles[i].stop();
                 }
             }
 
@@ -119,15 +119,15 @@ GameLayer = cc.LayerColor.extend({
 
                 this.timer();
 
-                for (var i = 0; i < this.somethings.length; i++) {
-                    this.somethings[i].start();
+                for (var i = 0; i < this.obstacles.length; i++) {
+                    this.obstacles[i].start();
                 }
 
                 // check hit obstacles
-                for (var i = 0; i < this.somethings.length; i++) {
-                    if (this.player.hit(this.somethings[i], 24, 24)) {
+                for (var i = 0; i < this.obstacles.length; i++) {
+                    if (this.player.hit(this.obstacles[i], 24, 24)) {
                         // random obstacle again
-                        this.somethings[i].randomPosition();
+                        this.obstacles[i].randomPosition();
 
                         // playing soundEffect
                         cc.audioEngine.playEffect('res/Sound/whenHitSong.mp3');
@@ -260,34 +260,34 @@ GameLayer = cc.LayerColor.extend({
             // check player started
             console.info("Start Player: " + this.player.started);
             // check obstacle started
-            this.somethings.forEach(function (something) {
-                console.info("Start Obstacle: " + something.started);
+            this.obstacles.forEach(function (obstacle) {
+                console.info("Start Obstacle: " + obstacle.started);
             }, this);
 
             // check num obstacle
-            console.info("Number of obstacle: " + this.somethings.length);
+            console.info("Number of obstacle: " + this.obstacles.length);
         }
     },
 
     addObstacle: function () {
-        this.somethings.push(new Something);
-        this.addChild(this.somethings[this.somethings.length - 1]);
-        this.somethings[this.somethings.length - 1].scheduleUpdate();
-        console.info("Add finish, Have: " + this.somethings.length);
+        this.obstacles.push(new Obstacle);
+        this.addChild(this.obstacles[this.obstacles.length - 1]);
+        this.obstacles[this.obstacles.length - 1].scheduleUpdate();
+        console.info("Add finish, Have: " + this.obstacles.length);
         this.point += GameLayer.UPPOINT.OBSTACLE;
     },
 
     removeObstacle: function () {
-        this.somethings[this.somethings.length - 1].unschedule();
-        this.removeChild(this.somethings[this.somethings.length - 1], true);
-        this.somethings.pop();
-        console.info("Remove finish, Have: " + this.somethings.length);
+        this.obstacles[this.obstacles.length - 1].unschedule();
+        this.removeChild(this.obstacles[this.obstacles.length - 1], true);
+        this.obstacles.pop();
+        console.info("Remove finish, Have: " + this.obstacles.length);
     },
 
     timer: function () {
         this.time++;
         this.player.addScore(Math.round((this.time / 10)));
-        if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
+        if (this.time / 60 % Obstacle.SECOND_TO_APPEAR == 0)
             this.addObstacle();
     },
 
@@ -325,11 +325,11 @@ GameLayer = cc.LayerColor.extend({
             this.scoreLabel.setString("score: 0");
 
             // remove obstacle
-            for (var i = 0; i < this.somethings.length; i++) {
-                this.removeChild(this.somethings[i], true);
+            for (var i = 0; i < this.obstacles.length; i++) {
+                this.removeChild(this.obstacles[i], true);
             }
             // clear array
-            this.somethings.splice(0, this.somethings.length);
+            this.obstacles.splice(0, this.obstacles.length);
 
             // add new object
             for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
@@ -367,8 +367,8 @@ GameLayer = cc.LayerColor.extend({
         this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
 
         // stop obstacle
-        for (var i = 0; i < this.somethings.length; i++) {
-            this.somethings[i].stop();
+        for (var i = 0; i < this.obstacles.length; i++) {
+            this.obstacles[i].stop();
         }
         //mute background music
         cc.audioEngine.setMusicVolume(0);

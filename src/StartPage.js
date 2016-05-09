@@ -36,9 +36,7 @@ var StartPage = cc.Sprite.extend({
             + '- when player collect heart exp will increase 300 and add 1 life\n'
             + 'collect carrot exp will increase 100 and remove 1 obstacle\n'
             + 'and one of obstacle will increase exp 1000\n'
-            + '- You can press "p" to auto play mode\n'
-            + '- You can press  "o" to manual mode\n'
-            + '- You can press "m" to turn off the sound');
+            + '- You can press "m" to turn off/ turn on the sound');
     }
 });
 

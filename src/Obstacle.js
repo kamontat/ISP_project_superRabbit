@@ -1,4 +1,4 @@
-var Something = cc.Sprite.extend({
+var Obstacle = cc.Sprite.extend({
     ctor: function () {
         this._super();
         // random obstacle pic
@@ -21,14 +21,14 @@ var Something = cc.Sprite.extend({
         this.x = 0;
         this.y = 0;
 
-        this.randMoveX = Math.random() * Something.SPEEDNOTOVER;
-        this.randMoveY = Math.random() * Something.SPEEDNOTOVER;
+        this.randMoveX = Math.random() * Obstacle.SPEEDNOTOVER;
+        this.randMoveY = Math.random() * Obstacle.SPEEDNOTOVER;
 
         this.started = true;
 
-        while (this.randMoveX <= Something.SPEEDATLEAST || this.randMoveY <= Something.SPEEDATLEAST) {
-            this.randMoveX = Math.random() * Something.SPEEDNOTOVER;
-            this.randMoveY = Math.random() * Something.SPEEDNOTOVER;
+        while (this.randMoveX <= Obstacle.SPEEDATLEAST || this.randMoveY <= Obstacle.SPEEDATLEAST) {
+            this.randMoveX = Math.random() * Obstacle.SPEEDNOTOVER;
+            this.randMoveY = Math.random() * Obstacle.SPEEDNOTOVER;
         }
 
         this.randDir = Math.ceil(Math.random() * 2);
@@ -41,7 +41,7 @@ var Something = cc.Sprite.extend({
             this.warp();
             switch (this.rand) {
                 // left
-                case Something.DIR.LEFT:
+                case Obstacle.DIR.LEFT:
                     if (this.randDir == 1) {
                         this.setPosition(new cc.Point(this.x + this.randMoveX, this.y + this.randMoveY));
                     } else {
@@ -49,7 +49,7 @@ var Something = cc.Sprite.extend({
                     }
                     break;
                 // up
-                case Something.DIR.UP:
+                case Obstacle.DIR.UP:
                     if (this.randDir == 1) {
                         this.setPosition(new cc.Point(this.x + this.randMoveX, this.y - this.randMoveY));
                     } else {
@@ -57,7 +57,7 @@ var Something = cc.Sprite.extend({
                     }
                     break;
                 // right
-                case Something.DIR.RIGHT:
+                case Obstacle.DIR.RIGHT:
                     if (this.randDir == 1) {
                         this.setPosition(new cc.Point(this.x - this.randMoveX, this.y + this.randMoveY));
                     } else {
@@ -65,7 +65,7 @@ var Something = cc.Sprite.extend({
                     }
                     break;
                 // down
-                case Something.DIR.DOWN:
+                case Obstacle.DIR.DOWN:
                     if (this.randDir == 1) {
                         this.setPosition(new cc.Point(this.x + this.randMoveX, this.y + this.randMoveY));
                     } else {
@@ -74,7 +74,7 @@ var Something = cc.Sprite.extend({
                     break;
                 // other
                 default:
-                    console.error("Cause Error on Update in Something");
+                    console.error("Cause Error on Update in Obstacle");
                     break;
             }
             this.x = this.getPositionX();
@@ -92,28 +92,28 @@ var Something = cc.Sprite.extend({
         this.rand = Math.ceil(Math.random() * 4);
         switch (this.rand) {
             // left
-            case Something.DIR.LEFT:
+            case Obstacle.DIR.LEFT:
                 this.x = 0;
                 this.y = Math.ceil(Math.random() * screenHeight);
                 break;
             // up
-            case Something.DIR.UP:
+            case Obstacle.DIR.UP:
                 this.x = Math.ceil(Math.random() * screenWidth);
                 this.y = screenHeight;
                 break;
             // right
-            case Something.DIR.RIGHT:
+            case Obstacle.DIR.RIGHT:
                 this.x = screenWidth;
                 this.y = Math.ceil(Math.random() * screenHeight);
                 break;
             // down
-            case Something.DIR.DOWN:
+            case Obstacle.DIR.DOWN:
                 this.x = Math.ceil(Math.random() * screenWidth);
                 this.y = 0;
                 break;
             // other
             default:
-                console.error("Cause Error on randomPosition in Something");
+                console.error("Cause Error on randomPosition in Obstacle");
                 break;
         }
         this.setPosition(new cc.Point(this.x, this.y));
@@ -128,12 +128,12 @@ var Something = cc.Sprite.extend({
     }
 });
 
-Something.SPEEDATLEAST = 3;
-Something.SPEEDNOTOVER = 10;
+Obstacle.SPEEDATLEAST = 3;
+Obstacle.SPEEDNOTOVER = 10;
 
-Something.SECOND_TO_APPEAR = 3;
+Obstacle.SECOND_TO_APPEAR = 3;
 
-Something.DIR = {
+Obstacle.DIR = {
     LEFT: 1,
     UP: 2,
     RIGHT: 3,
