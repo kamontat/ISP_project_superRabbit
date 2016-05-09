@@ -4,7 +4,6 @@
  */
 var GameLayer;
 GameLayer = cc.LayerColor.extend({
-
     init: function () {
         this._super(new cc.Color(240, 220, 175, 255));
         this.setPosition(new cc.Point(0, 0));
@@ -196,6 +195,7 @@ GameLayer = cc.LayerColor.extend({
                 this.player.jump(keyCode);
             }
         }
+
         // check by key
 
         //press "d" to delete data in local storage
@@ -415,6 +415,24 @@ var StartScene = cc.Scene.extend({
         }
     }
 });
+
+var GameScene = cc.Scene.extend({
+    onEnter: function () {
+        this._super();
+        var layer = new GameLayer();
+        layer.init();
+        this.addChild(layer);
+    },
+});
+
+var StartScene = cc.Scene.extend({
+    onEnter: function() {
+        this._super();
+        var startPage = new StartPage();
+        this.addChild(startPage);
+    }
+});
+
 
 GameLayer.NUMOBJECT = 3;
 
