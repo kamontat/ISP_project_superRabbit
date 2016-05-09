@@ -2,7 +2,6 @@
  * @author "Soraya Saenna"
  * @version 1.5.0
  */
-
 var GameLayer;
 GameLayer = cc.LayerColor.extend({
 
@@ -13,6 +12,9 @@ GameLayer = cc.LayerColor.extend({
 
         // declare sound variable
         this.sound = true;
+
+        // level 3000 point = 1 level
+        this.point = 3000;
 
         //declare variable for timer
         this.time = 0;
@@ -45,6 +47,9 @@ GameLayer = cc.LayerColor.extend({
             this.addChild(this.somethings[i]);
         }
 
+        this.levelLabel = cc.LabelTTF.create("LV: " + this.convertLV(), 'Arial', 25);
+        this.levelLabel.setPosition(new cc.Point(60, screenHeight - 50));
+        this.addChild(this.levelLabel);
 
         this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score: " + this.player.getScoreFromLocal(), 'Arial', 25);
         this.highScore.setPosition(new cc.Point(screenWidth / 3, screenHeight - 50));
@@ -87,7 +92,6 @@ GameLayer = cc.LayerColor.extend({
     },
 
     update: function () {
-
         // end is mean END
         if (this.state != GameLayer.STATES.END) {
             // out length
@@ -113,7 +117,9 @@ GameLayer = cc.LayerColor.extend({
                 this.player.start();
                 this.item.start();
                 this.carrot.start();
+
                 this.timer();
+
                 for (var i = 0; i < this.somethings.length; i++) {
                     this.somethings[i].start();
                 }
@@ -144,6 +150,7 @@ GameLayer = cc.LayerColor.extend({
                     cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
                     this.player.life++;
                     this.item.hide();
+                    this.point += GameLayer.UPPOINT.HEART;
                 }
 
                 // check hit carrot
@@ -151,10 +158,12 @@ GameLayer = cc.LayerColor.extend({
                     cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
                     this.removeObstacle();
                     this.carrot.hide();
+                    this.point += GameLayer.UPPOINT.CARROT;
                 }
 
-
                 // update label and color
+                this.levelLabel.setString("LV: " + this.convertLV());
+                this.scoreLabel.setString("score: " + this.player.score);
                 this.lifeLabel.setString(this.player.life);
                 if (this.player.life == 2) {
                     this.lifeLabel.setColor(cc.color(255, 255, 0));
@@ -265,6 +274,7 @@ GameLayer = cc.LayerColor.extend({
         this.addChild(this.somethings[this.somethings.length - 1]);
         this.somethings[this.somethings.length - 1].scheduleUpdate();
         console.info("Add finish, Have: " + this.somethings.length);
+        this.point += GameLayer.UPPOINT.OBSTACLE;
     },
 
     removeObstacle: function () {
@@ -274,12 +284,20 @@ GameLayer = cc.LayerColor.extend({
         console.info("Remove finish, Have: " + this.somethings.length);
     },
 
+    timer: function () {
+        this.time++;
+        this.player.addScore(Math.round((this.time / 10)));
+        if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
+            this.addObstacle();
+    },
+
+    convertLV: function () {
+        return Number(Math.floor(this.point / 3000)).toFixed(0);
+    },
+
     restart: function () {
         if (this.state == GameLayer.STATES.DEAD) {
             this.state = GameLayer.STATES.PAUSE;
-
-            //update play time label
-            this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
 
             // player
             this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
@@ -288,16 +306,19 @@ GameLayer = cc.LayerColor.extend({
             this.player.score = 0;
             this.player.life = Player.lIFE;
 
-            //add score in to local Storage
-            this.player.setScoreToLocal();
             //set high score label
             this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+            //update play time label
+            this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
 
             // item
             this.item.randomPos();
 
             //carrot
             this.carrot.randomPos();
+
+            // point
+            this.point = 0;
 
             // timer
             this.time = 0;
@@ -317,8 +338,7 @@ GameLayer = cc.LayerColor.extend({
         } else {
             console.error("You not DEAD!");
         }
-    }
-    ,
+    },
 
     endGame: function () {
         // change state
@@ -356,7 +376,7 @@ GameLayer = cc.LayerColor.extend({
         cc.audioEngine.setMusicVolume(0);
         cc.audioEngine.setEffectsVolume(0);
 
-        if (confirm("Do you want to play again (lv. " + this.somethings.length + ") !?")) {
+        if (confirm("Do you want to play again (lv. " + this.convertLV() + ") !?")) {
             // un mute the music sound
             this.sound = true;
             cc.audioEngine.setMusicVolume(1);
@@ -379,39 +399,35 @@ GameLayer = cc.LayerColor.extend({
             cc.audioEngine.setMusicVolume(1);
             cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
         }
-    },
-
-    timer: function () {
-        this.time++;
-        this.player.addScore(Math.round((this.time / 10)));
-        this.scoreLabel.setString("score: " + this.player.score);
-        if (this.time / 60 % Something.SECOND_TO_APPEAR == 0)
-            this.addObstacle();
     }
 });
 
 var StartScene = cc.Scene.extend({
-        onEnter: function () {
-            this._super();
+    onEnter: function () {
+        this._super();
 
-            //test local storage
-            if (typeof(Storage) === "undefined") {
-                console.error("your browser don't support local storage");
-            } else {
-                var layer = new GameLayer();
-                layer.init();
-                this.addChild(layer);
-                console.log("GameLayer created");
-            }
+        //test local storage
+        if (typeof(Storage) === "undefined") {
+            console.error("your browser don't support local storage");
+        } else {
+            var layer = new GameLayer();
+            layer.init();
+            this.addChild(layer);
+            console.log("GameLayer created");
         }
-    })
-    ;
+    }
+});
 
-GameLayer.NUMOBJECT = 4;
+GameLayer.NUMOBJECT = 3;
 
 GameLayer.STATES = {
     PAUSE: 1,
     STARTED: 2,
-    DEAD: 3,
-    END: 0
+    DEAD: 3
+};
+
+GameLayer.UPPOINT = {
+    OBSTACLE: 1000,
+    HEART: 300,
+    CARROT: 100
 };
