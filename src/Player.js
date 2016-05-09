@@ -116,8 +116,10 @@ var Player = cc.Sprite.extend({
      * set score into localStorage.
      */
     setScoreToLocal: function () {
-        if (this.score > this.getScoreFromLocal() || this.getScoreFromLocal() === null) {
+        if (this.score > cc.sys.localStorage.getItem("highScore") || cc.sys.localStorage.getItem("name") === null) {
+            var name = prompt("Enter Your Name?");
             cc.sys.localStorage.setItem("highScore", this.score);
+            cc.sys.localStorage.setItem("name", name);
         }
         console.log(cc.sys.localStorage.getItem("highScore"));
     },
@@ -126,7 +128,8 @@ var Player = cc.Sprite.extend({
      * get score from localStorage.
      */
     getScoreFromLocal: function () {
-        return cc.sys.localStorage.getItem("highScore");
+        var text = "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScore");
+        return text;
     },
 
     /**

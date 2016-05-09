@@ -195,10 +195,12 @@ GameLayer = cc.LayerColor.extend({
             cc.sys.localStorage.removeItem("play");
             cc.sys.localStorage.removeItem("highScore");
             cc.sys.localStorage.removeItem("avgScore");
+            cc.sys.localStorage.removeItem("name");
 
             cc.sys.localStorage.setItem("play", 0);
             cc.sys.localStorage.setItem("highScore", 0);
             cc.sys.localStorage.setItem("avgScore", 0);
+            cc.sys.localStorage.setItem("name", "");
 
             this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
             this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
