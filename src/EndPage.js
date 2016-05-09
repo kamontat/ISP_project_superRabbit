@@ -7,7 +7,7 @@ var EndPage = cc.Sprite.extend({
         this._super();
         this.initWithFile("res/Images/endPage.jpg");
 
-        this.scoreLabel = cc.LabelTTF.create("High-Score: " + cc.sys.localStorage.getItem("highScore"), 'Arial', 40);
+        this.scoreLabel = cc.LabelTTF.create("High-Score: " + "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScore"), 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth - 200, screenHeight - 370));
         this.addChild(this.scoreLabel);
 
@@ -19,4 +19,4 @@ var EndPage = cc.Sprite.extend({
         this.avgLabel.setPosition(new cc.Point(screenWidth - 200, screenHeight - 470));
         this.addChild(this.avgLabel);
     }
-})
+});
