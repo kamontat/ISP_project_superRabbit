@@ -131,7 +131,7 @@ var Something = cc.Sprite.extend({
 Something.SPEEDATLEAST = 3;
 Something.SPEEDNOTOVER = 10;
 
-Something.SECOND_TO_APPEAR = 4;
+Something.SECOND_TO_APPEAR = 3;
 
 Something.DIR = {
     LEFT: 1,
