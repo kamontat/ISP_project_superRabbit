@@ -3,19 +3,19 @@ var Something = cc.Sprite.extend({
         this._super();
         // random obstacle pic
         this.numOfRand = Math.ceil(Math.random() * 6);
-               if (this.numOfRand == 1) {
-                   this.initWithFile('res/Images/Monster1.png');
-               } else if (this.numOfRand == 2){
-                   this.initWithFile('res/Images/Monster2.png');
-               } else if (this.numOfRand == 3) {
-                   this.initWithFile('res/Images/Monster3.png')
-               } else if (this.numOfRand == 4) {
-                   this.initWithFile('res/Images/Monster4.png')
-               } else if (this.numOfRand == 5) {
-                   this.initWithFile('res/Images/Monster5.png')
-               } else {
-                   this.initWithFile('res/Images/Monster6.png')
-               }
+        if (this.numOfRand == 1) {
+            this.initWithFile('res/Images/Monster1.png');
+        } else if (this.numOfRand == 2) {
+            this.initWithFile('res/Images/Monster2.png');
+        } else if (this.numOfRand == 3) {
+            this.initWithFile('res/Images/Monster3.png')
+        } else if (this.numOfRand == 4) {
+            this.initWithFile('res/Images/Monster4.png')
+        } else if (this.numOfRand == 5) {
+            this.initWithFile('res/Images/Monster5.png')
+        } else {
+            this.initWithFile('res/Images/Monster6.png')
+        }
 
 
         this.x = 0;
@@ -131,7 +131,7 @@ var Something = cc.Sprite.extend({
 Something.SPEEDATLEAST = 3;
 Something.SPEEDNOTOVER = 10;
 
-Something.SECOND_TO_APPEAR = 3;
+Something.SECOND_TO_APPEAR = 4;
 
 Something.DIR = {
     LEFT: 1,

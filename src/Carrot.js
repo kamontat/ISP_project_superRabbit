@@ -60,4 +60,4 @@ var Carrot = cc.Sprite.extend({
     }
 );
 
-Carrot.SECOND_TO_APPEAR = 3;
+Carrot.SECOND_TO_APPEAR = 2;
