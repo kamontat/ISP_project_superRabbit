@@ -107,11 +107,11 @@ var Player = cc.Sprite.extend({
     },
 
     /**
-     * add score to this score.
-     * @param score is score of player.
+     * add score in term of lv
+     * @param lv current lv of player
      */
-    addScore: function (score) {
-        this.score = score;
+    addScore: function (lv) {
+        this.score += Number(lv);
     },
 
     /**
@@ -151,7 +151,7 @@ var Player = cc.Sprite.extend({
     }
 });
 
-Player.lIFE = 5;
+Player.lIFE = 50;
 
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;

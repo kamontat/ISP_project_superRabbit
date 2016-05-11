@@ -90,35 +90,23 @@ GameLayer = cc.LayerColor.extend({
     },
 
     update: function () {
+
         // out length
         if (this.player.checkOut()) {
             this.endGame();
         }
+
         // first player of press pause button
         if (this.state == GameLayer.STATES.PAUSE) {
-            // stop player
-            this.player.stop();
-            // stop item
-            this.item.stop();
-            //stop carrot
-            this.carrot.stop();
-            // stop obstacle
-            for (var i = 0; i < this.obstacles.length; i++) {
-                this.obstacles[i].stop();
-            }
+            this.pauseGame();
         }
 
         // Play iT!
         if (this.state == GameLayer.STATES.STARTED) {
-            this.player.start();
-            this.item.start();
-            this.carrot.start();
+            this.time++;
 
-            this.timer();
-
-            for (var i = 0; i < this.obstacles.length; i++) {
-                this.obstacles[i].start();
-            }
+            this.updateScore();
+            this.updateObstacle();
 
             // check hit obstacles
             for (var i = 0; i < this.obstacles.length; i++) {
@@ -158,7 +146,7 @@ GameLayer = cc.LayerColor.extend({
             }
 
             // update label and color
-            this.levelLabel.setString("LV: " + this.convertLV());
+            this.setLV();
             this.scoreLabel.setString("score: " + this.player.score);
             this.lifeLabel.setString(this.player.life);
             if (this.player.life == 2) {
@@ -184,8 +172,7 @@ GameLayer = cc.LayerColor.extend({
     onKeyDown: function (keyCode) {
         if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left) {
             if (this.state == GameLayer.STATES.PAUSE) {
-                this.state = GameLayer.STATES.STARTED;
-                this.player.start();
+                this.startGame();
             }
             if (this.state == GameLayer.STATES.STARTED) {
                 this.player.jump(keyCode);
@@ -283,15 +270,71 @@ GameLayer = cc.LayerColor.extend({
         console.info("Number of obstacle: " + this.obstacles.length);
     },
 
-    timer: function () {
-        this.time++;
-        this.player.addScore(Math.round((this.time / 10)) * this.convertLV());
-        if (this.time / 60 % Obstacle.SECOND_TO_APPEAR == 0)
+    /**
+     * update 6 time in every second
+     */
+    updateScore: function () {
+        // run 6 time in 1 second
+        if (this.check(6, 1))
+            this.player.addScore(this.convertLV());
+    },
+
+    /**
+     * update every 3 second
+     */
+    updateObstacle: function () {
+        // Obstacle.SECOND_TO_APPEAR second will run this if 1 time
+        if (this.check(1, Obstacle.SECOND_TO_APPEAR))
             this.addObstacle(true);
     },
 
     convertLV: function () {
         return Number(Math.floor(this.point / GameLayer.STARTEXP)).toFixed(0);
+    },
+
+    setLV: function () {
+        if (this.levelLabel.getString() != "LV: " + this.convertLV()) {
+            console.log("Level up (" + this.convertLV() + ")");
+        }
+        this.levelLabel.setString("LV: " + this.convertLV());
+    },
+
+    /**
+     * use only have time update in every frame
+     * @param time how many times you want
+     * @param second how many second you want
+     * @returns {boolean} true, false
+     */
+    check: function (time, second) {
+        return this.time / (60 / time) % second == 0;
+    },
+
+    startGame: function () {
+        // change state
+        this.state = GameLayer.STATES.STARTED;
+        // start player
+        this.player.start();
+        // start item
+        this.item.start();
+        // start carrot
+        this.carrot.start();
+        // start obstacle
+        for (var i = 0; i < this.obstacles.length; i++) {
+            this.obstacles[i].start();
+        }
+    },
+
+    pauseGame: function () {
+        // stop player
+        this.player.stop();
+        // stop item
+        this.item.stop();
+        // stop carrot
+        this.carrot.stop();
+        // stop obstacle
+        for (var i = 0; i < this.obstacles.length; i++) {
+            this.obstacles[i].stop();
+        }
     },
 
     restart: function () {
@@ -319,7 +362,7 @@ GameLayer = cc.LayerColor.extend({
             // point
             this.point = GameLayer.STARTEXP;
 
-            // timer
+            // updateScore
             this.time = 0;
             this.scoreLabel.setString("score: 0");
 
