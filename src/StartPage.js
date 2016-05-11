@@ -33,8 +33,8 @@ var StartPage = cc.Sprite.extend({
         alert('- Press up, down, left, right arrows to move the player \n'
             + '- Player must avoid obstacles\n'
             + '- Score increase by increased of time\n'
-            + '- collect heart, player will get 1 life\n'
-            + '- collect carrot, game will remove 1 obstacle\n'
+            + '- collect *heart*, player will get 1 life\n'
+            + '- collect *carrot*, game will remove 1 obstacle\n'
             + '- You can press "m" to turn off/on the sound');
     }
 });
