@@ -5,12 +5,12 @@ var res = {
     startPage_jpg: 'res/Images/StartPage.png',
     endPage_jpg: 'res/Images/EndPage.jpg',
 
-    monster1_png: 'res/Images/Monster1.png',
-    monster2_png: 'res/Images/Monster2.png',
-    monster3_png: 'res/Images/Monster3.png',
-    monster4_png: 'res/Images/Monster4.png',
-    monster5_png: 'res/Images/Monster5.png',
-    monster6_png: 'res/Images/Monster6.png',
+    monster1_png: 'res/Images/monsterfile/Monster1.png',
+    monster2_png: 'res/Images/monsterfile/Monster2.png',
+    monster3_png: 'res/Images/monsterfile/Monster3.png',
+    monster4_png: 'res/Images/monsterfile/Monster4.png',
+    monster5_png: 'res/Images/monsterfile/Monster5.png',
+    monster6_png: 'res/Images/monsterfile/Monster6.png',
 
     playSound_fall: 'res/Sound/whenPlaySound.mp3',
     hitHeartSound_fall: 'res/Sound/soundWhenCollectHeart.mp3',
