@@ -13,7 +13,7 @@ GameLayer = cc.LayerColor.extend({
         this.sound = true;
 
         // level 3000 point = 1 level
-        this.point = 3000;
+        this.point = GameLayer.STARTEXP;
 
         //declare variable for timer
         this.time = 0;
@@ -292,7 +292,7 @@ GameLayer = cc.LayerColor.extend({
     },
 
     convertLV: function () {
-        return Number(Math.floor(this.point / 3000)).toFixed(0);
+        return Number(Math.floor(this.point / GameLayer.STARTEXP)).toFixed(0);
     },
 
     restart: function () {
@@ -318,7 +318,7 @@ GameLayer = cc.LayerColor.extend({
             this.carrot.randomPos();
 
             // point
-            this.point = 0;
+            this.point = GameLayer.STARTEXP;
 
             // timer
             this.time = 0;
@@ -403,7 +403,6 @@ GameLayer = cc.LayerColor.extend({
 var StartScene = cc.Scene.extend({
     onEnter: function () {
         this._super();
-
         //test local storage
         if (typeof(Storage) === "undefined") {
             console.error("your browser don't support local storage");
@@ -424,7 +423,6 @@ var GameScene = cc.Scene.extend({
     }
 });
 
-
 GameLayer.NUMOBJECT = 3;
 
 GameLayer.STATES = {
@@ -432,6 +430,8 @@ GameLayer.STATES = {
     STARTED: 2,
     DEAD: 3
 };
+
+GameLayer.STARTEXP = 3000;
 
 GameLayer.UPPOINT = {
     OBSTACLE: 500,

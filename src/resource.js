@@ -2,7 +2,7 @@ var res = {
     dot_png: 'res/Images/Dot.png',
     heart_png: 'res/Images/Heart.png',
     carrot_png: 'res/Images/Carrot.png',
-    startPage_jpg: 'res/Images/StartPage.jpg',
+    startPage_jpg: 'res/Images/StartPage.png',
     endPage_jpg: 'res/Images/EndPage.jpg',
 
     monster1_png: 'res/Images/Monster1.png',
