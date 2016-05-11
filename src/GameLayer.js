@@ -12,12 +12,11 @@ GameLayer = cc.LayerColor.extend({
         // declare sound variable
         this.sound = true;
 
-        // level 3000 point = 1 level
+        // exp: 3000 point = 1 level
         this.point = GameLayer.STARTEXP;
 
         //declare variable for timer
         this.time = 0;
-        this.numItem = 0;
 
         //add background
         this.background = new Background();
@@ -198,19 +197,7 @@ GameLayer = cc.LayerColor.extend({
 
         //press "d" to delete data in local storage
         if (keyCode == cc.KEY.d) {
-            cc.sys.localStorage.removeItem("play");
-            cc.sys.localStorage.removeItem("highScore");
-            cc.sys.localStorage.removeItem("avgScore");
-            cc.sys.localStorage.removeItem("name");
-
-            cc.sys.localStorage.setItem("play", 0);
-            cc.sys.localStorage.setItem("highScore", 0);
-            cc.sys.localStorage.setItem("avgScore", 0);
-            cc.sys.localStorage.setItem("name", "");
-
-            this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
-            this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
-            this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
+            this.resetHistory();
         }
 
         // auto play
@@ -218,7 +205,6 @@ GameLayer = cc.LayerColor.extend({
             this.player.schedule(this.player.autoJump, 0.15);
             console.warn("auto play: Turn ON");
         }
-
         // manual play
         if (keyCode == cc.KEY.o) {
             this.player.unschedule(this.player.autoJump);
@@ -236,34 +222,11 @@ GameLayer = cc.LayerColor.extend({
                 cc.audioEngine.setEffectsVolume(1);
                 this.sound = true;
             }
-            console.info("Mute Sound: " + !this.sound);
         }
 
         //press "s" to check all information
         if (keyCode == cc.KEY.s) {
-            // check state
-            if (this.state == GameLayer.STATES.STARTED) {
-                console.info("state: Started");
-            } else if (this.state == GameLayer.STATES.PAUSE) {
-                console.info("state: Pause");
-            } else if (this.state == GameLayer.STATES.DEAD) {
-                console.info("state: Dead");
-            } else if (this.state == GameLayer.STATES.END) {
-                console.info("state: End");
-            }
-
-            // game info
-            console.info(this.sound ? "Music: ON" : "Music: OFF");
-
-            // check player started
-            console.info("Start Player: " + this.player.started);
-            // check obstacle started
-            this.obstacles.forEach(function (obstacle) {
-                console.info("Start Obstacle: " + obstacle.started);
-            }, this);
-
-            // check num obstacle
-            console.info("Number of obstacle: " + this.obstacles.length);
+            this.logStatus();
         }
     },
 
@@ -282,6 +245,45 @@ GameLayer = cc.LayerColor.extend({
         this.removeChild(this.obstacles[this.obstacles.length - 1], true);
         this.obstacles.pop();
         console.info("Remove finish, Have: " + this.obstacles.length);
+    },
+
+    resetHistory: function () {
+        cc.sys.localStorage.removeItem("play");
+        cc.sys.localStorage.removeItem("highScore");
+        cc.sys.localStorage.removeItem("avgScore");
+        cc.sys.localStorage.removeItem("name");
+
+        cc.sys.localStorage.setItem("play", 0);
+        cc.sys.localStorage.setItem("highScore", 0);
+        cc.sys.localStorage.setItem("avgScore", 0);
+        cc.sys.localStorage.setItem("name", "");
+
+        this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+        this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+        this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
+    },
+
+    logStatus: function () {
+        // check state
+        if (this.state == GameLayer.STATES.STARTED) {
+            console.info("state: Started");
+        } else if (this.state == GameLayer.STATES.PAUSE) {
+            console.info("state: Pause");
+        } else if (this.state == GameLayer.STATES.DEAD) {
+            console.info("state: Dead");
+        } else if (this.state == GameLayer.STATES.END) {
+            console.info("state: End");
+        }
+        // game info
+        console.info(this.sound ? "Music: ON" : "Music: OFF");
+        // check player started
+        console.info("Start Player: " + this.player.started);
+        // check obstacle started
+        this.obstacles.forEach(function (obstacle) {
+            console.info("Start Obstacle: " + obstacle.started);
+        }, this);
+        // check num obstacle
+        console.info("Number of obstacle: " + this.obstacles.length);
     },
 
     timer: function () {
