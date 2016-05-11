@@ -267,12 +267,14 @@ GameLayer = cc.LayerColor.extend({
         }
     },
 
-    addObstacle: function () {
+    addObstacle: function (update) {
         this.obstacles.push(new Obstacle);
         this.addChild(this.obstacles[this.obstacles.length - 1]);
         this.obstacles[this.obstacles.length - 1].scheduleUpdate();
         console.info("Add finish, Have: " + this.obstacles.length);
-        this.point += GameLayer.UPPOINT.OBSTACLE;
+        if (update) {
+            this.point += GameLayer.UPPOINT.OBSTACLE;
+        }
     },
 
     removeObstacle: function () {
@@ -284,9 +286,9 @@ GameLayer = cc.LayerColor.extend({
 
     timer: function () {
         this.time++;
-        this.player.addScore(Math.round((this.time / 10)));
+        this.player.addScore(Math.round((this.time / 10)) * this.convertLV());
         if (this.time / 60 % Obstacle.SECOND_TO_APPEAR == 0)
-            this.addObstacle();
+            this.addObstacle(true);
     },
 
     convertLV: function () {
@@ -331,7 +333,7 @@ GameLayer = cc.LayerColor.extend({
 
             // add new object
             for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
-                this.addObstacle();
+                this.addObstacle(false);
             }
         } else {
             console.error("You not DEAD!");
@@ -406,10 +408,8 @@ var StartScene = cc.Scene.extend({
         if (typeof(Storage) === "undefined") {
             console.error("your browser don't support local storage");
         } else {
-            var layer = new GameLayer();
-            layer.init();
-            this.addChild(layer);
-            console.log("GameLayer created");
+            var startPage = new StartPage();
+            this.addChild(startPage);
         }
     }
 });
@@ -420,6 +420,7 @@ var GameScene = cc.Scene.extend({
         var layer = new GameLayer();
         layer.init();
         this.addChild(layer);
+        console.log("GameLayer created");
     }
 });
 
@@ -433,7 +434,7 @@ GameLayer.STATES = {
 };
 
 GameLayer.UPPOINT = {
-    OBSTACLE: 1000,
-    HEART: 300,
-    CARROT: 100
+    OBSTACLE: 500,
+    HEART: 750,
+    CARROT: 150
 };

@@ -7,7 +7,7 @@ var StartPage = cc.Sprite.extend({
     ctor: function () {
         this._super();
         this.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-        this.initWithFile("res/Images/startPage.png");
+        this.initWithFile("res/Images/StartPage.png");
         this.addKeyboardHandlers();
     },
 
