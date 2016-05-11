@@ -32,7 +32,9 @@ var Player = cc.Sprite.extend({
     autoJump: function () {
         var action = [cc.KEY.up, cc.KEY.down, cc.KEY.left, cc.KEY.right];
         var rand = Math.floor(Math.random() * 4);
+
         this.jump(action[rand]);
+
         if (this.getPosition().x < 75) {
             this.jump(action[3]);
         }

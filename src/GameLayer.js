@@ -196,8 +196,6 @@ GameLayer = cc.LayerColor.extend({
             }
         }
 
-        // check by key
-
         //press "d" to delete data in local storage
         if (keyCode == cc.KEY.d) {
             cc.sys.localStorage.removeItem("play");
@@ -376,10 +374,10 @@ GameLayer = cc.LayerColor.extend({
 
         if (confirm("Do you want to play again (lv. " + this.convertLV() + ") !?")) {
             // un mute the music sound
-            this.sound = true;
-            cc.audioEngine.setMusicVolume(1);
-            cc.audioEngine.setEffectsVolume(1);
-
+            if (this.sound) {
+                cc.audioEngine.setMusicVolume(1);
+                cc.audioEngine.setEffectsVolume(1);
+            }
             this.restart();
         } else {
             // end sound
