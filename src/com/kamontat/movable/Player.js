@@ -119,11 +119,12 @@ var Player = cc.Sprite.extend({
      */
     setScoreToLocal: function () {
         if (this.score > cc.sys.localStorage.getItem("highScore") || cc.sys.localStorage.getItem("name") === null) {
-            var name = prompt("Enter Your Name (Not over 5 letters)?");
+            do {
+                var name = prompt("Enter Your Name (Not over 5 letters)?");
+            } while (name.length >= 5);
             cc.sys.localStorage.setItem("highScore", this.score);
             cc.sys.localStorage.setItem("name", name);
         }
-        console.log(cc.sys.localStorage.getItem("highScore"));
     },
 
     /**
