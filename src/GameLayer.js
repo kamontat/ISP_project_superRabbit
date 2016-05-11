@@ -90,86 +90,83 @@ GameLayer = cc.LayerColor.extend({
     },
 
     update: function () {
-        // end is mean END
-        if (this.state != GameLayer.STATES.END) {
-            // out length
-            if (this.player.checkOut()) {
-                this.endGame();
+        // out length
+        if (this.player.checkOut()) {
+            this.endGame();
+        }
+        // first player of press pause button
+        if (this.state == GameLayer.STATES.PAUSE) {
+            // stop player
+            this.player.stop();
+            // stop item
+            this.item.stop();
+            //stop carrot
+            this.carrot.stop();
+            // stop obstacle
+            for (var i = 0; i < this.obstacles.length; i++) {
+                this.obstacles[i].stop();
             }
-            // first player of press pause button
-            if (this.state == GameLayer.STATES.PAUSE) {
-                // stop player
-                this.player.stop();
-                // stop item
-                this.item.stop();
-                //stop carrot
-                this.carrot.stop();
-                // stop obstacle
-                for (var i = 0; i < this.obstacles.length; i++) {
-                    this.obstacles[i].stop();
-                }
+        }
+
+        // Play iT!
+        if (this.state == GameLayer.STATES.STARTED) {
+            this.player.start();
+            this.item.start();
+            this.carrot.start();
+
+            this.timer();
+
+            for (var i = 0; i < this.obstacles.length; i++) {
+                this.obstacles[i].start();
             }
 
-            // Play iT!
-            if (this.state == GameLayer.STATES.STARTED) {
-                this.player.start();
-                this.item.start();
-                this.carrot.start();
+            // check hit obstacles
+            for (var i = 0; i < this.obstacles.length; i++) {
+                if (this.player.hit(this.obstacles[i], 24, 24)) {
+                    // random obstacle again
+                    this.obstacles[i].randomPosition();
 
-                this.timer();
+                    // playing soundEffect
+                    cc.audioEngine.playEffect('res/Sound/whenHitSong.mp3');
 
-                for (var i = 0; i < this.obstacles.length; i++) {
-                    this.obstacles[i].start();
-                }
-
-                // check hit obstacles
-                for (var i = 0; i < this.obstacles.length; i++) {
-                    if (this.player.hit(this.obstacles[i], 24, 24)) {
-                        // random obstacle again
-                        this.obstacles[i].randomPosition();
-
-                        // playing soundEffect
-                        cc.audioEngine.playEffect('res/Sound/whenHitSong.mp3');
-
-                        // loss life.. another way of if.
-                        if (this.player.lossLive()) {
-                            // set life label
-                            this.lifeLabel.setString(this.player.life);
-                            // end this game
-                            this.endGame();
-                        }
+                    // loss life.. another way of if.
+                    if (this.player.lossLive()) {
                         // set life label
                         this.lifeLabel.setString(this.player.life);
+                        // end this game
+                        this.endGame();
                     }
+                    // set life label
+                    this.lifeLabel.setString(this.player.life);
                 }
+            }
 
-                // check hit item
-                if (this.player.hit(this.item, 24, 24)) {
-                    cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
-                    this.player.life++;
-                    this.item.hide();
-                    this.point += GameLayer.UPPOINT.HEART;
-                }
+            // check hit item
+            if (this.player.hit(this.item, 24, 24)) {
+                cc.audioEngine.playEffect('res/Sound/soundWhenCollectHeart.mp3');
+                this.player.life++;
+                this.item.hide();
+                this.point += GameLayer.UPPOINT.HEART;
+            }
 
-                // check hit carrot
-                if (this.player.hit(this.carrot, 24, 35)) {
-                    cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
-                    this.removeObstacle();
-                    this.carrot.hide();
-                    this.point += GameLayer.UPPOINT.CARROT;
-                }
+            // check hit carrot
+            if (this.player.hit(this.carrot, 24, 35)) {
+                cc.audioEngine.playEffect('res/Sound/whenHitCarrot.mp3');
+                this.removeObstacle();
+                this.carrot.hide();
+                this.point += GameLayer.UPPOINT.CARROT;
+            }
 
-                // update label and color
-                this.levelLabel.setString("LV: " + this.convertLV());
-                this.scoreLabel.setString("score: " + this.player.score);
-                this.lifeLabel.setString(this.player.life);
-                if (this.player.life == 2) {
-                    this.lifeLabel.setColor(cc.color(255, 255, 0));
-                } else if (this.player.life <= 1) {
-                    this.lifeLabel.setColor(cc.color(255, 0, 0));
-                } else {
-                    this.lifeLabel.setColor(cc.color(0, 0, 255));
-                }
+            // update label and color
+            this.levelLabel.setString("LV: " + this.convertLV());
+            this.scoreLabel.setString("score: " + this.player.score);
+            this.lifeLabel.setString(this.player.life);
+            if (this.player.life == 2) {
+                this.lifeLabel.setColor(cc.color(255, 255, 0));
+            } else if (this.player.life <= 1) {
+                this.lifeLabel.setColor(cc.color(255, 0, 0));
+            } else {
+                this.lifeLabel.setColor(cc.color(0, 0, 255));
             }
         }
     },
@@ -384,6 +381,8 @@ GameLayer = cc.LayerColor.extend({
             }
             this.restart();
         } else {
+            this.unscheduleUpdate();
+
             // end sound
             cc.audioEngine.end();
 
@@ -391,9 +390,6 @@ GameLayer = cc.LayerColor.extend({
             var endPage = new EndPage();
             endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
             this.addChild(endPage, 1);
-
-            // change status
-            this.state = GameLayer.STATES.END;
 
             //playing end music
             cc.audioEngine.setMusicVolume(1);
