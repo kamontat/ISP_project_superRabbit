@@ -146,16 +146,7 @@ GameLayer = cc.LayerColor.extend({
             }
 
             // update label and color
-            this.setLV();
-            this.scoreLabel.setString("score: " + this.player.score);
-            this.lifeLabel.setString(this.player.life);
-            if (this.player.life == 2) {
-                this.lifeLabel.setColor(cc.color(255, 255, 0));
-            } else if (this.player.life <= 1) {
-                this.lifeLabel.setColor(cc.color(255, 0, 0));
-            } else {
-                this.lifeLabel.setColor(cc.color(0, 0, 255));
-            }
+            this.updateLabel();
         }
     },
 
@@ -242,9 +233,7 @@ GameLayer = cc.LayerColor.extend({
         cc.sys.localStorage.setItem("avgScore", 0);
         cc.sys.localStorage.setItem("name", "");
 
-        this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
-        this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
-        this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
+        this.updateLabel();
     },
 
     logStatus: function () {
@@ -286,6 +275,32 @@ GameLayer = cc.LayerColor.extend({
         // Obstacle.SECOND_TO_APPEAR second will run this if 1 time
         if (this.check(1, Obstacle.SECOND_TO_APPEAR))
             this.addObstacle(true);
+    },
+
+    updateLabel: function () {
+        // set lv abel
+        this.setLV();
+        // set score label
+        this.scoreLabel.setString("score: " + this.player.score);
+        // set life label
+        this.lifeLabel.setString(this.player.life);
+        this.changeLifeColor();
+        //set high score label
+        this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+        //set played time label
+        this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+        //set average score
+        this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
+    },
+
+    changeLifeColor: function () {
+        if (this.player.life == 2) {
+            this.lifeLabel.setColor(cc.color(255, 255, 0));
+        } else if (this.player.life <= 1) {
+            this.lifeLabel.setColor(cc.color(255, 0, 0));
+        } else {
+            this.lifeLabel.setColor(cc.color(0, 0, 255));
+        }
     },
 
     convertLV: function () {
@@ -348,23 +363,19 @@ GameLayer = cc.LayerColor.extend({
             this.player.score = 0;
             this.player.life = Player.lIFE;
 
-            //set high score label
-            this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
-            //update play time label
-            this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+            // set label
+            this.updateLabel();
 
             // item
             this.item.randomPos();
-
             //carrot
             this.carrot.randomPos();
 
             // point
             this.point = GameLayer.STARTEXP;
 
-            // updateScore
+            // timer
             this.time = 0;
-            this.scoreLabel.setString("score: 0");
 
             // remove obstacle
             for (var i = 0; i < this.obstacles.length; i++) {
@@ -386,8 +397,7 @@ GameLayer = cc.LayerColor.extend({
         // change state
         this.state = GameLayer.STATES.DEAD;
 
-        // stop player
-        this.player.stop();
+        this.pauseGame();
         //add score in to local Storage
         this.player.setScoreToLocal();
 
@@ -401,17 +411,9 @@ GameLayer = cc.LayerColor.extend({
         //update average score
         cc.sys.localStorage.setItem("avgScore", (((avg * play) + score) / (play + 1)).toFixed(2));
 
-        //set high score label
-        this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
-        //set played time label
-        this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
-        //set average score
-        this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
+        // update all label
+        this.updateLabel();
 
-        // stop obstacle
-        for (var i = 0; i < this.obstacles.length; i++) {
-            this.obstacles[i].stop();
-        }
         //mute background music
         cc.audioEngine.setMusicVolume(0);
         cc.audioEngine.setEffectsVolume(0);
@@ -422,18 +424,16 @@ GameLayer = cc.LayerColor.extend({
                 cc.audioEngine.setMusicVolume(1);
                 cc.audioEngine.setEffectsVolume(1);
             }
+            // restart
             this.restart();
         } else {
             this.unscheduleUpdate();
-
             // end sound
             cc.audioEngine.end();
-
             // open end page
             var endPage = new EndPage();
             endPage.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
-            this.addChild(endPage, 1);
-
+            this.addChild(endPage);
             //playing end music
             cc.audioEngine.setMusicVolume(1);
             cc.audioEngine.playMusic('res/Sound/endingSound.mp3', true);
