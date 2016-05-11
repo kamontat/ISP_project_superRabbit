@@ -128,8 +128,10 @@ var Player = cc.Sprite.extend({
      * get score from localStorage.
      */
     getScoreFromLocal: function () {
-        var text = "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScore");
-        return text;
+        if (cc.sys.localStorage.getItem("name") == null || cc.sys.localStorage.getItem("highScore") == null) {
+            return null;
+        }
+        return "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScore");
     },
 
     /**
