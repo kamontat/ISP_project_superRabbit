@@ -431,6 +431,7 @@ var GameLayer = cc.LayerColor.extend({
             this.restart();
         } else {
             this.unscheduleUpdate();
+            this.removeAllChildren(true);
             // end sound
             cc.audioEngine.end();
             // open end page
