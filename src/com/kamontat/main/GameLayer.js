@@ -2,8 +2,7 @@
  * @author "Soraya Saenna"
  * @version 1.5.0
  */
-var GameLayer;
-GameLayer = cc.LayerColor.extend({
+var GameLayer = cc.LayerColor.extend({
     init: function () {
         this._super(new cc.Color(240, 220, 175, 255));
         this.setPosition(new cc.Point(0, 0));
@@ -329,6 +328,7 @@ GameLayer = cc.LayerColor.extend({
         this.state = GameLayer.STATES.STARTED;
         // start player
         this.player.start();
+        this.player.jump();
         // start item
         this.item.start();
         // start carrot
@@ -388,8 +388,6 @@ GameLayer = cc.LayerColor.extend({
             for (var i = 0; i < GameLayer.NUMOBJECT; i++) {
                 this.addObstacle(false);
             }
-        } else {
-            console.error("You not DEAD!");
         }
     },
 

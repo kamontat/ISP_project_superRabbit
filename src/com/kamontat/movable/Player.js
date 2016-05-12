@@ -1,3 +1,4 @@
+//noinspection JSDuplicatedDeclaration
 /**
  * @class
  * player class in this game
@@ -73,6 +74,14 @@ var Player = cc.Sprite.extend({
             return true;
         }
         return false;
+    },
+
+    /**
+     * player jump
+     */
+    jump: function () {
+        this.vy = Player.STARTING_VELOCITY;
+        this.vx = 0;
     },
 
     /**
