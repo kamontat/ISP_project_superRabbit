@@ -127,11 +127,11 @@ var Player = cc.Sprite.extend({
      * set score into localStorage.
      */
     setScoreToLocal: function () {
-        if (this.score > cc.sys.localStorage.getItem("highScore") || cc.sys.localStorage.getItem("name") === null) {
+        if (this.score > cc.sys.localStorage.getItem("highScoreLabel") || cc.sys.localStorage.getItem("name") === null) {
             do {
                 var name = prompt("Enter Your Name (Not over 5 letters)?");
             } while (name.length >= 5);
-            cc.sys.localStorage.setItem("highScore", this.score);
+            cc.sys.localStorage.setItem("highScoreLabel", this.score);
             cc.sys.localStorage.setItem("name", name);
         }
     },
@@ -140,10 +140,10 @@ var Player = cc.Sprite.extend({
      * get score from localStorage.
      */
     getScoreFromLocal: function () {
-        if (cc.sys.localStorage.getItem("name") == null || cc.sys.localStorage.getItem("highScore") == null) {
+        if (cc.sys.localStorage.getItem("name") == null || cc.sys.localStorage.getItem("highScoreLabel") == null) {
             return null;
         }
-        return "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScore");
+        return "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScoreLabel");
     },
 
     /**

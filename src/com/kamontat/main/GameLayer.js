@@ -48,17 +48,21 @@ var GameLayer = cc.LayerColor.extend({
         this.levelLabel.setPosition(new cc.Point(60, screenHeight - 50));
         this.addChild(this.levelLabel);
 
-        this.highScore = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score: " + this.player.getScoreFromLocal(), 'Arial', 25);
-        this.highScore.setPosition(new cc.Point(screenWidth / 3, screenHeight - 50));
-        this.addChild(this.highScore);
+        this.expLabel = cc.LabelTTF.create(Number(this.point - GameLayer.STARTEXP).toFixed(0) + "/" + this.convertLV() * GameLayer.STARTEXP, 'Arial', 15);
+        this.expLabel.setPosition(new cc.Point(60, screenHeight - 70));
+        this.addChild(this.expLabel);
 
-        this.playTime = cc.LabelTTF.create(cc.sys.localStorage.getItem("play") == null ? "play: 0" : "play: " + cc.sys.localStorage.getItem("play"), 'Arial', 40);
-        this.playTime.setPosition(new cc.Point(100, screenHeight - 100));
-        this.addChild(this.playTime);
+        this.highScoreLabel = cc.LabelTTF.create(this.player.getScoreFromLocal() == null ? "high-score: 0" : "high-score: " + this.player.getScoreFromLocal(), 'Arial', 25);
+        this.highScoreLabel.setPosition(new cc.Point(screenWidth / 3, screenHeight - 50));
+        this.addChild(this.highScoreLabel);
 
-        this.avgScore = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScore") == null ? "avg-score: 0" : "avg-score: " + cc.sys.localStorage.getItem("avgScore"), 'Arial', 25);
-        this.avgScore.setPosition(new cc.Point(2 * screenWidth / 3, screenHeight - 50));
-        this.addChild(this.avgScore);
+        this.playTimeLabel = cc.LabelTTF.create(cc.sys.localStorage.getItem("play") == null ? "play: 0" : "play: " + cc.sys.localStorage.getItem("play"), 'Arial', 40);
+        this.playTimeLabel.setPosition(new cc.Point(100, screenHeight - 100));
+        this.addChild(this.playTimeLabel);
+
+        this.avgScoreLabel = cc.LabelTTF.create(cc.sys.localStorage.getItem("avgScoreLabel") == null ? "avg-score: 0" : "avg-score: " + cc.sys.localStorage.getItem("avgScoreLabel"), 'Arial', 25);
+        this.avgScoreLabel.setPosition(new cc.Point(2 * screenWidth / 3, screenHeight - 50));
+        this.addChild(this.avgScoreLabel);
 
         this.scoreLabel = cc.LabelTTF.create("score: 0", 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth / 2, screenHeight - 100));
@@ -223,13 +227,13 @@ var GameLayer = cc.LayerColor.extend({
 
     resetHistory: function () {
         cc.sys.localStorage.removeItem("play");
-        cc.sys.localStorage.removeItem("highScore");
-        cc.sys.localStorage.removeItem("avgScore");
+        cc.sys.localStorage.removeItem("highScoreLabel");
+        cc.sys.localStorage.removeItem("avgScoreLabel");
         cc.sys.localStorage.removeItem("name");
 
         cc.sys.localStorage.setItem("play", 0);
-        cc.sys.localStorage.setItem("highScore", 0);
-        cc.sys.localStorage.setItem("avgScore", 0);
+        cc.sys.localStorage.setItem("highScoreLabel", 0);
+        cc.sys.localStorage.setItem("avgScoreLabel", 0);
         cc.sys.localStorage.setItem("name", "");
 
         this.updateLabel();
@@ -279,17 +283,18 @@ var GameLayer = cc.LayerColor.extend({
     updateLabel: function () {
         // set lv abel
         this.setLV();
+        this.expLabel.setString(Number(this.point - GameLayer.STARTEXP).toFixed(0) + "/" + this.convertLV() * GameLayer.STARTEXP);
         // set score label
         this.scoreLabel.setString("score: " + this.player.score);
         // set life label
         this.lifeLabel.setString(this.player.life);
         this.changeLifeColor();
         //set high score label
-        this.highScore.setString("high-score: " + this.player.getScoreFromLocal());
+        this.highScoreLabel.setString("high-score: " + this.player.getScoreFromLocal());
         //set played time label
-        this.playTime.setString("play: " + cc.sys.localStorage.getItem("play"));
+        this.playTimeLabel.setString("play: " + cc.sys.localStorage.getItem("play"));
         //set average score
-        this.avgScore.setString("avg-score: " + cc.sys.localStorage.getItem("avgScore"));
+        this.avgScoreLabel.setString("avg-score: " + cc.sys.localStorage.getItem("avgScoreLabel"));
     },
 
     changeLifeColor: function () {
@@ -401,13 +406,13 @@ var GameLayer = cc.LayerColor.extend({
 
         //get info from local storage
         var play = Number(cc.sys.localStorage.getItem("play"));
-        var avg = cc.sys.localStorage.getItem("avgScore");
+        var avg = cc.sys.localStorage.getItem("avgScoreLabel");
         var score = this.player.score;
 
         //update player played time
         cc.sys.localStorage.setItem("play", play + 1);
         //update average score
-        cc.sys.localStorage.setItem("avgScore", (((avg * play) + score) / (play + 1)).toFixed(2));
+        cc.sys.localStorage.setItem("avgScoreLabel", (((avg * play) + score) / (play + 1)).toFixed(2));
 
         // update all label
         this.updateLabel();
@@ -470,7 +475,7 @@ GameLayer.STATES = {
     DEAD: 3
 };
 
-GameLayer.STARTEXP = 3000;
+GameLayer.STARTEXP = 5000;
 
 GameLayer.UPPOINT = {
     OBSTACLE: 500,
