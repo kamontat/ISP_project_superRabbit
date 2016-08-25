@@ -4,6 +4,6 @@
 var Background = cc.Sprite.extend({
     ctor: function() {
         this._super();
-        this.initWithFile("res/Images/Background.jpg");
+        this.initWithFile("res/images/Background.jpg");
     }
 })

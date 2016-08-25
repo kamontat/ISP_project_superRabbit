@@ -5,7 +5,7 @@
 var EndPage = cc.Sprite.extend({
     ctor: function () {
         this._super();
-        this.initWithFile("res/Images/EndPage.jpg");
+        this.initWithFile("res/images/EndPage.jpg");
 
         this.scoreLabel = cc.LabelTTF.create("High-Score: " + "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScoreLabel"), 'Arial', 40);
         this.scoreLabel.setPosition(new cc.Point(screenWidth - 200, screenHeight - 370));
