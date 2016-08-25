@@ -1,7 +1,7 @@
 var Item = cc.Sprite.extend({
         ctor: function () {
             this._super();
-            this.initWithFile("res/images/Heart.png");
+            this.initWithFile("res/image/Heart.png");
             this.randomPos();
             this.time = 0;
             this.appear = true;

@@ -81,7 +81,7 @@ var GameLayer = cc.LayerColor.extend({
         this.addKeyboardHandlers();
 
         // sound start
-        cc.audioEngine.playMusic('res/Sound/WhenPlaySound.mp3', true);
+        cc.audioEngine.playMusic('res/sound/WhenPlaySound.mp3', true);
 
         this.scheduleUpdate();
         this.player.scheduleUpdate();
@@ -118,7 +118,7 @@ var GameLayer = cc.LayerColor.extend({
                     this.obstacles[i].randomPosition();
 
                     // playing soundEffect
-                    cc.audioEngine.playEffect('res/Sound/WhenHitSong.mp3');
+                    cc.audioEngine.playEffect('res/sound/WhenHitSong.mp3');
 
                     // loss life.. another way of if.
                     if (this.player.lossLive()) {
@@ -134,7 +134,7 @@ var GameLayer = cc.LayerColor.extend({
 
             // check hit item
             if (this.player.hit(this.item, 24, 24)) {
-                cc.audioEngine.playEffect('res/Sound/WhenCollectHeart.mp3');
+                cc.audioEngine.playEffect('res/sound/WhenCollectHeart.mp3');
                 this.player.life++;
                 this.item.hide();
                 this.point += GameLayer.UPPOINT.HEART;
@@ -142,7 +142,7 @@ var GameLayer = cc.LayerColor.extend({
 
             // check hit carrot
             if (this.player.hit(this.carrot, 24, 35)) {
-                cc.audioEngine.playEffect('res/Sound/WhenHitCarrot.mp3');
+                cc.audioEngine.playEffect('res/sound/WhenHitCarrot.mp3');
                 this.removeObstacle();
                 this.carrot.hide();
                 this.point += GameLayer.UPPOINT.CARROT;
@@ -440,7 +440,7 @@ var GameLayer = cc.LayerColor.extend({
             this.addChild(endPage);
             //playing end music
             cc.audioEngine.setMusicVolume(1);
-            cc.audioEngine.playMusic('res/Sound/EndingSound.mp3', true);
+            cc.audioEngine.playMusic('res/sound/EndingSound.mp3', true);
         }
     }
 });

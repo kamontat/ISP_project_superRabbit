@@ -5,7 +5,7 @@
 var Carrot = cc.Sprite.extend({
         ctor: function () {
             this._super();
-            this.initWithFile("res/images/Carrot.png");
+            this.initWithFile("res/image/Carrot.png");
             this.randomPos();
             this.time = 0;
             this.appear = true;

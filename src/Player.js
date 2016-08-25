@@ -10,7 +10,7 @@ var Player = cc.Sprite.extend({
      */
     ctor: function () {
         this._super();
-        this.initWithFile("res/images/dot.png");
+        this.initWithFile("res/image/Dot.png");
 
         this.score = 0;
         this.life = Player.lIFE;
