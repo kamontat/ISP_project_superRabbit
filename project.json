@@ -17,7 +17,7 @@
     "src/StartPage.js",
     "src/Player.js",
     "src/Obstacle.js",
-    "src/tem.js",
+    "src/Item.js",
     "src/Carrot.js",
     "src/resource.js"
   ]

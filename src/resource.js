@@ -1,20 +1,20 @@
 var res = {
-    dot_png: 'res/Images/Dot.png',
-    heart_png: 'res/Images/Heart.png',
-    carrot_png: 'res/Images/Carrot.png',
-    startPage_jpg: 'res/Images/StartPage.png',
-    endPage_jpg: 'res/Images/EndPage.jpg',
+    dot_png: 'res/image/Dot.png',
+    heart_png: 'res/image/Heart.png',
+    carrot_png: 'res/image/Carrot.png',
+    startPage_jpg: 'res/image/StartPage.png',
+    endPage_jpg: 'res/image/EndPage.jpg',
 
-    monster1_png: 'res/Images/monsterfile/Monster1.png',
-    monster2_png: 'res/Images/monsterfile/Monster2.png',
-    monster3_png: 'res/Images/monsterfile/Monster3.png',
-    monster4_png: 'res/Images/monsterfile/Monster4.png',
-    monster5_png: 'res/Images/monsterfile/Monster5.png',
-    monster6_png: 'res/Images/monsterfile/Monster6.png',
+    monster1_png: 'res/image/monsterfile/Monster1.png',
+    monster2_png: 'res/image/monsterfile/Monster2.png',
+    monster3_png: 'res/image/monsterfile/Monster3.png',
+    monster4_png: 'res/image/monsterfile/Monster4.png',
+    monster5_png: 'res/image/monsterfile/Monster5.png',
+    monster6_png: 'res/image/monsterfile/Monster6.png',
 
-    playSound_fall: 'res/Sound/whenPlaySound.mp3',
-    hitHeartSound_fall: 'res/Sound/soundWhenCollectHeart.mp3',
-    hitSound_fall: 'res/Sound/whenHitSong.mp3'
+    playSound_fall: 'res/sound/WhenPlaySound.mp3',
+    hitHeartSound_fall: 'res/sound/WhenCollectHeart.mp3',
+    hitSound_fall: 'res/sound/WhenHitSong.mp3'
 
 };
 
