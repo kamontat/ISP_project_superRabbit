@@ -161,7 +161,7 @@ var Player = cc.Sprite.extend({
     }
 });
 
-Player.lIFE = 50;
+Player.lIFE = 5;
 
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;
