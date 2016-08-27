@@ -479,7 +479,7 @@ GameLayer.STATES = {
 GameLayer.STARTEXP = 5000;
 
 GameLayer.UPPOINT = {
-    OBSTACLE: 500,
-    HEART: 750,
-    CARROT: 150
+    OBSTACLE: 700,
+    HEART: 1000,
+    CARROT: 300
 };
