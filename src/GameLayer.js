@@ -11,9 +11,6 @@ var GameLayer = cc.LayerColor.extend({
         // declare sound variable
         this.sound = true;
 
-        // exp: 3000 point = 1 level
-        this.point = GameLayer.STARTEXP;
-
         //declare variable for timer
         this.time = 0;
 
@@ -28,9 +25,9 @@ var GameLayer = cc.LayerColor.extend({
         this.addChild(this.player, 1);
 
         //addItem
-        this.item = new Item();
-        this.addChild(this.item);
-        this.item.scheduleUpdate();
+        this.heart = new Heart();
+        this.addChild(this.heart);
+        this.heart.scheduleUpdate();
 
         //add carrot
         this.carrot = new Carrot();
@@ -48,7 +45,7 @@ var GameLayer = cc.LayerColor.extend({
         this.levelLabel.setPosition(new cc.Point(60, screenHeight - 50));
         this.addChild(this.levelLabel);
 
-        this.expLabel = cc.LabelTTF.create(Number(this.point - GameLayer.STARTEXP).toFixed(0) + "/" + this.convertLV() * GameLayer.STARTEXP, 'Arial', 15);
+        this.expLabel = cc.LabelTTF.create(Number(this.player.exp - Player.START_EXP).toFixed(0) + "/" + this.convertLV() * Player.START_EXP, 'Arial', 15);
         this.expLabel.setPosition(new cc.Point(60, screenHeight - 70));
         this.addChild(this.expLabel);
 
@@ -77,6 +74,9 @@ var GameLayer = cc.LayerColor.extend({
         this.lifeLabel.setColor(cc.color(0, 0, 255));
         this.addChild(this.lifeLabel);
 
+        this.statusLabel = cc.LabelTTF.create("Pause", 'Arial', 20);
+        this.statusLabel.setPosition(new cc.Point(screenWidth - 80, screenHeight - 50));
+        this.addChild(this.statusLabel);
 
         this.addKeyboardHandlers();
 
@@ -93,13 +93,12 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     update: function () {
-
         // out length
         if (this.player.checkOut()) {
             this.endGame();
         }
 
-        // first player of press pause button
+        // iff pause button been press
         if (this.state == GameLayer.STATES.PAUSE) {
             this.pauseGame();
         }
@@ -108,6 +107,7 @@ var GameLayer = cc.LayerColor.extend({
         if (this.state == GameLayer.STATES.STARTED) {
             this.time++;
 
+            this.updateStatus();
             this.updateScore();
             this.updateObstacle();
 
@@ -132,12 +132,12 @@ var GameLayer = cc.LayerColor.extend({
                 }
             }
 
-            // check hit item
-            if (this.player.hit(this.item, 24, 24)) {
+            // check hit heart
+            if (this.player.hit(this.heart, 24, 24)) {
                 cc.audioEngine.playEffect('res/sound/WhenCollectHeart.mp3');
-                this.player.life++;
-                this.item.hide();
-                this.point += GameLayer.UPPOINT.HEART;
+                this.player.life += GameLayer.ITEMS.HEART.POINT;
+                this.heart.hide();
+                this.player.exp += GameLayer.ITEMS.HEART.EXP;
             }
 
             // check hit carrot
@@ -145,7 +145,7 @@ var GameLayer = cc.LayerColor.extend({
                 cc.audioEngine.playEffect('res/sound/WhenHitCarrot.mp3');
                 this.removeObstacle();
                 this.carrot.hide();
-                this.point += GameLayer.UPPOINT.CARROT;
+                this.player.exp += GameLayer.ITEMS.CARROT;
             }
 
             // update label and color
@@ -163,8 +163,17 @@ var GameLayer = cc.LayerColor.extend({
         }, this);
     },
 
+    /**
+     * arrow or a-s-w-d -> control direction
+     * d -> delete all history
+     * q -> auto play [ON]
+     * e -> auto play [OFF]
+     * m -> mute sound
+     * p -> pause to game
+     * i -> log all information
+     */
     onKeyDown: function (keyCode) {
-        if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left) {
+        if (keyCode == cc.KEY.up || keyCode == cc.KEY.right || keyCode == cc.KEY.down || keyCode == cc.KEY.left || keyCode == cc.KEY.a || keyCode == cc.KEY.s || keyCode == cc.KEY.d || keyCode == cc.KEY.w) {
             if (this.state == GameLayer.STATES.PAUSE) {
                 this.startGame();
             }
@@ -179,12 +188,12 @@ var GameLayer = cc.LayerColor.extend({
         }
 
         // auto play
-        if (keyCode == cc.KEY.p) {
+        if (keyCode == cc.KEY.q) {
             this.player.schedule(this.player.autoJump, 0.15);
             console.warn("auto play: Turn ON");
         }
         // manual play
-        if (keyCode == cc.KEY.o) {
+        if (keyCode == cc.KEY.e) {
             this.player.unschedule(this.player.autoJump);
             console.warn("auto play: Turn OFF");
         }
@@ -200,10 +209,21 @@ var GameLayer = cc.LayerColor.extend({
                 cc.audioEngine.setEffectsVolume(1);
                 this.sound = true;
             }
+            this.updateStatus();
+        }
+
+        // press 'p' to pause the game
+        if (keyCode == cc.KEY.p) {
+            if (this.state == GameLayer.STATES.STARTED) {
+                this.state = GameLayer.STATES.PAUSE;
+            } else {
+                this.startGame();
+            }
+            this.updateStatus();
         }
 
         //press "s" to check all information
-        if (keyCode == cc.KEY.s) {
+        if (keyCode == cc.KEY.i) {
             this.logStatus();
         }
     },
@@ -214,7 +234,7 @@ var GameLayer = cc.LayerColor.extend({
         this.obstacles[this.obstacles.length - 1].scheduleUpdate();
         console.info("Add finish, Have: " + this.obstacles.length);
         if (update) {
-            this.point += GameLayer.UPPOINT.OBSTACLE;
+            this.player.exp += GameLayer.ITEMS.OBSTACLE;
         }
     },
 
@@ -272,6 +292,24 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     /**
+     * to update status iff have change change
+     */
+    updateStatus: function () {
+        var txt = "";
+        if (this.state == GameLayer.STATES.PAUSE) {
+            txt = "Pause";
+            if (!this.sound) {
+                txt += "/Mute";
+            }
+        } else {
+            if (!this.sound) {
+                txt += "Mute";
+            }
+        }
+        this.statusLabel.setString(txt);
+    },
+
+    /**
      * update every 3 second
      */
     updateObstacle: function () {
@@ -283,7 +321,7 @@ var GameLayer = cc.LayerColor.extend({
     updateLabel: function () {
         // set lv abel
         this.setLV();
-        this.expLabel.setString(Number(this.point - GameLayer.STARTEXP).toFixed(0) + "/" + this.convertLV() * GameLayer.STARTEXP);
+        this.expLabel.setString(Number(this.player.exp - Player.START_EXP).toFixed(0) + "/" + this.convertLV() * Player.START_EXP);
         // set score label
         this.scoreLabel.setString("score: " + this.player.score);
         // set life label
@@ -308,7 +346,7 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     convertLV: function () {
-        return Number(Math.floor(this.point / GameLayer.STARTEXP)).toFixed(0);
+        return Number(Math.floor(this.player.exp / Player.START_EXP)).toFixed(0);
     },
 
     setLV: function () {
@@ -334,8 +372,8 @@ var GameLayer = cc.LayerColor.extend({
         // start player
         this.player.start();
         this.player.jump();
-        // start item
-        this.item.start();
+        // start heart
+        this.heart.start();
         // start carrot
         this.carrot.start();
         // start obstacle
@@ -347,8 +385,8 @@ var GameLayer = cc.LayerColor.extend({
     pauseGame: function () {
         // stop player
         this.player.stop();
-        // stop item
-        this.item.stop();
+        // stop heart
+        this.heart.stop();
         // stop carrot
         this.carrot.stop();
         // stop obstacle
@@ -371,13 +409,13 @@ var GameLayer = cc.LayerColor.extend({
             // set label
             this.updateLabel();
 
-            // item
-            this.item.randomPos();
+            // heart
+            this.heart.randomPos();
             //carrot
             this.carrot.randomPos();
 
-            // point
-            this.point = GameLayer.STARTEXP;
+            // exp
+            this.player.exp = Player.START_EXP;
 
             // timer
             this.time = 0;
@@ -449,7 +487,7 @@ var StartScene = cc.Scene.extend({
     onEnter: function () {
         this._super();
         //test local storage
-        if (typeof(Storage) === "undefined") {
+        if (typeof (Storage) === "undefined") {
             console.error("your browser don't support local storage");
         } else {
             var startPage = new StartPage();
@@ -476,10 +514,11 @@ GameLayer.STATES = {
     DEAD: 3
 };
 
-GameLayer.STARTEXP = 5000;
-
-GameLayer.UPPOINT = {
-    OBSTACLE: 700,
-    HEART: 1000,
-    CARROT: 300
+GameLayer.ITEMS = {
+    OBSTACLE: 900,
+    HEART: {
+        POINT: 1,
+        EXP: 1300
+    },
+    CARROT: 500
 };

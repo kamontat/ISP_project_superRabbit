@@ -8,12 +8,15 @@ var Player = cc.Sprite.extend({
      * @constructor
      * init player in first time.
      */
-    ctor: function () {
+    ctor: function() {
         this._super();
         this.initWithFile("res/image/Dot.png");
 
         this.score = 0;
         this.life = Player.lIFE;
+        // exp: 3000 exp = 1 level
+        this.exp = Player.START_EXP;
+
         this.vx = 0;
         this.vy = Player.STARTING_VELOCITY;
         this.started = false;
@@ -22,7 +25,7 @@ var Player = cc.Sprite.extend({
     /**
      * update player to move by gravity.
      */
-    update: function () {
+    update: function() {
         if (this.started) {
             var pos = this.getPosition();
             this.setPosition(new cc.Point(pos.x + this.vx, pos.y + this.vy));
@@ -30,7 +33,7 @@ var Player = cc.Sprite.extend({
         }
     },
 
-    autoJump: function () {
+    autoJump: function() {
         var action = [cc.KEY.up, cc.KEY.down, cc.KEY.left, cc.KEY.right];
         var rand = Math.floor(Math.random() * 4);
 
@@ -55,7 +58,7 @@ var Player = cc.Sprite.extend({
      *     @function will check if life is zero it will return true
      * @returns {boolean} true when it dead; otherwise, return false
      */
-    lossLive: function () {
+    lossLive: function() {
         this.life--;
         if (this.life <= 0) {
             return true;
@@ -67,7 +70,7 @@ var Player = cc.Sprite.extend({
      *  To check player position this is out from screen or not?
      * @returns {boolean}
      */
-    checkOut: function () {
+    checkOut: function() {
         if (this.getPositionX() < 0 || this.getPositionX() > screenWidth) {
             return true;
         } else if (this.getPositionY() < 0 || this.getPositionY() > screenHeight) {
@@ -79,7 +82,7 @@ var Player = cc.Sprite.extend({
     /**
      * player jump
      */
-    jump: function () {
+    jump: function() {
         this.vy = Player.STARTING_VELOCITY;
         this.vx = 0;
     },
@@ -89,15 +92,15 @@ var Player = cc.Sprite.extend({
      * And make player jump to that direction
      * @param keyCode the code of keyboard
      */
-    jump: function (keyCode) {
+    jump: function(keyCode) {
         this.vy = Player.STARTING_VELOCITY;
-        if (keyCode == cc.KEY.left) {
+        if (keyCode == cc.KEY.left || keyCode == cc.KEY.a) {
             this.vx = -5;
-        } else if (keyCode == cc.KEY.right) {
+        } else if (keyCode == cc.KEY.right || keyCode == cc.KEY.d) {
             this.vx = 5;
-        } else if (keyCode == cc.KEY.down) {
+        } else if (keyCode == cc.KEY.down || keyCode == cc.KEY.s) {
             this.vy = -this.vy;
-        } else {
+        } else if (keyCode == cc.KEY.up || keyCode == cc.KEY.w) {
             this.vx = 0;
         }
     },
@@ -107,26 +110,26 @@ var Player = cc.Sprite.extend({
      * @param obstacle some object to check hit or not
      * @returns {boolean}
      */
-    hit: function (obstacle, sizeX, sizeY) {
+    hit: function(obstacle, sizeX, sizeY) {
         var posPlayer = this.getPosition();
         var posObstacle = obstacle.getPosition();
 
         return ((Math.abs(posPlayer.x - posObstacle.x) <= sizeX) &&
-        (Math.abs(posPlayer.y - posObstacle.y) <= sizeY));
+            (Math.abs(posPlayer.y - posObstacle.y) <= sizeY));
     },
 
     /**
      * add score in term of lv
      * @param lv current lv of player
      */
-    addScore: function (lv) {
+    addScore: function(lv) {
         this.score += Number(lv);
     },
 
     /**
      * set score into localStorage.
      */
-    setScoreToLocal: function () {
+    setScoreToLocal: function() {
         if (this.score > cc.sys.localStorage.getItem("highScoreLabel") || cc.sys.localStorage.getItem("name") === null) {
             do {
                 var name = prompt("Enter Your Name (Not over 5 letters)?");
@@ -139,7 +142,7 @@ var Player = cc.Sprite.extend({
     /**
      * get score from localStorage.
      */
-    getScoreFromLocal: function () {
+    getScoreFromLocal: function() {
         if (cc.sys.localStorage.getItem("name") == null || cc.sys.localStorage.getItem("highScoreLabel") == null) {
             return null;
         }
@@ -149,19 +152,20 @@ var Player = cc.Sprite.extend({
     /**
      * if want player to start
      */
-    start: function () {
+    start: function() {
         this.started = true;
     },
 
     /**
      * if want player to stop
      */
-    stop: function () {
+    stop: function() {
         this.started = false;
     }
 });
 
 Player.lIFE = 5;
+Player.START_EXP = 5000;
 
 Player.G = 0.85;
 Player.STARTING_VELOCITY = 10;
