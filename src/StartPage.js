@@ -9,6 +9,7 @@ var StartPage = cc.Sprite.extend({
         this.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
         this.initWithFile("res/image/StartPage.png");
         this.addKeyboardHandlers();
+        this.addMouseHandlers();
     },
 
     addKeyboardHandlers: function () {
@@ -16,17 +17,26 @@ var StartPage = cc.Sprite.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function (keyCode, event) {
-                self.onKeyDown(keyCode);
+                console.log("key press");
+                if (keyCode == cc.KEY.space)
+                    self.popup();
             }
         }, this);
     },
 
-    onKeyDown: function (keyCode, event) {
-        // if press space-bar
-        if (keyCode == cc.KEY.space) {
-            this.showHowToPlay();
-            cc.director.pushScene(new GameScene());
-        }
+    addMouseHandlers: function () {
+        var self = this;
+        cc.eventManager.addListener({
+            event: cc.EventListener.MOUSE,
+            onMouseDown: function (event) {
+                self.popup();
+            }
+        }, this);
+    },
+
+    popup: function (keyCode, event) {
+        this.showHowToPlay();
+        cc.director.pushScene(new GameScene());
     },
 
     showHowToPlay: function () {
