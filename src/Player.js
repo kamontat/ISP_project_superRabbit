@@ -14,8 +14,9 @@ var Player = cc.Sprite.extend({
 
         this.score = 0;
         this.life = Player.lIFE;
+        this.lv = 1;
         // exp: 3000 exp = 1 level
-        this.exp = Player.START_EXP;
+        this.exp = 0;
 
         this.vx = 0;
         this.vy = Player.STARTING_VELOCITY;
@@ -149,11 +150,22 @@ var Player = cc.Sprite.extend({
         return "(" + cc.sys.localStorage.getItem("name") + ") " + cc.sys.localStorage.getItem("highScoreLabel");
     },
 
+    getMaxExp: function() {
+        return this.lv * Player.START_EXP;
+    },
+
+    // update exp and lv
+    updateLV: function(increaseExp) {
+        this.exp += increaseExp;
+        this.lv = 1 + parseInt((Math.floor(this.exp / Player.START_EXP)).toFixed(0));
+    },
+
     /**
      * if want player to start
      */
     start: function() {
         this.started = true;
+        this.jump();
     },
 
     /**
@@ -161,6 +173,13 @@ var Player = cc.Sprite.extend({
      */
     stop: function() {
         this.started = false;
+    },
+
+    reset: function() {
+        this.life = Player.lIFE;
+        this.lv = 1;
+        this.exp = 0;
+        this.score = 0;
     }
 });
 

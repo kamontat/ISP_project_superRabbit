@@ -41,11 +41,11 @@ var GameLayer = cc.LayerColor.extend({
             this.addChild(this.obstacles[i]);
         }
 
-        this.levelLabel = cc.LabelTTF.create("LV: " + this.convertLV(), 'Arial', 25);
+        this.levelLabel = cc.LabelTTF.create("LV: " + this.player.lv, 'Arial', 25);
         this.levelLabel.setPosition(new cc.Point(60, screenHeight - 50));
         this.addChild(this.levelLabel);
 
-        this.expLabel = cc.LabelTTF.create(Number(this.player.exp - Player.START_EXP).toFixed(0) + "/" + this.convertLV() * Player.START_EXP, 'Arial', 15);
+        this.expLabel = cc.LabelTTF.create(this.player.exp + "/" + this.player.getMaxExp(), 'Arial', 15);
         this.expLabel.setPosition(new cc.Point(60, screenHeight - 70));
         this.addChild(this.expLabel);
 
@@ -135,9 +135,9 @@ var GameLayer = cc.LayerColor.extend({
             // check hit heart
             if (this.player.hit(this.heart, 24, 24)) {
                 cc.audioEngine.playEffect('res/sound/WhenCollectHeart.mp3');
-                this.player.life += GameLayer.ITEMS.HEART.POINT;
                 this.heart.hide();
-                this.player.exp += GameLayer.ITEMS.HEART.EXP;
+                this.player.life += GameLayer.ITEMS.HEART.POINT;
+                this.player.updateLV(GameLayer.ITEMS.HEART.EXP);
             }
 
             // check hit carrot
@@ -145,7 +145,7 @@ var GameLayer = cc.LayerColor.extend({
                 cc.audioEngine.playEffect('res/sound/WhenHitCarrot.mp3');
                 this.removeObstacle();
                 this.carrot.hide();
-                this.player.exp += GameLayer.ITEMS.CARROT;
+                this.player.updateLV(GameLayer.ITEMS.CARROT);
             }
 
             // update label and color
@@ -234,7 +234,8 @@ var GameLayer = cc.LayerColor.extend({
         this.obstacles[this.obstacles.length - 1].scheduleUpdate();
         console.info("Add finish, Have: " + this.obstacles.length);
         if (update) {
-            this.player.exp += GameLayer.ITEMS.OBSTACLE;
+            this.player.updateLV(GameLayer.ITEMS.OBSTACLE);
+
         }
     },
 
@@ -288,7 +289,7 @@ var GameLayer = cc.LayerColor.extend({
     updateScore: function () {
         // run 6 time in 1 second
         if (this.check(6, 1))
-            this.player.addScore(this.convertLV());
+            this.player.addScore(this.player.lv);
     },
 
     /**
@@ -319,9 +320,10 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     updateLabel: function () {
-        // set lv abel
-        this.setLV();
-        this.expLabel.setString(Number(this.player.exp - Player.START_EXP).toFixed(0) + "/" + this.convertLV() * Player.START_EXP);
+        // set lv label
+        this.levelLabel.setString("LV: " + this.player.lv);
+        this.expLabel.setString(this.player.exp + "/" + this.player.getMaxExp());
+
         // set score label
         this.scoreLabel.setString("score: " + this.player.score);
         // set life label
@@ -345,17 +347,6 @@ var GameLayer = cc.LayerColor.extend({
         }
     },
 
-    convertLV: function () {
-        return Number(Math.floor(this.player.exp / Player.START_EXP)).toFixed(0);
-    },
-
-    setLV: function () {
-        if (this.levelLabel.getString() != "LV: " + this.convertLV()) {
-            console.log("Level up (" + this.convertLV() + ")");
-        }
-        this.levelLabel.setString("LV: " + this.convertLV());
-    },
-
     /**
      * use only have time update in every frame
      * @param time how many times you want
@@ -371,7 +362,6 @@ var GameLayer = cc.LayerColor.extend({
         this.state = GameLayer.STATES.STARTED;
         // start player
         this.player.start();
-        this.player.jump();
         // start heart
         this.heart.start();
         // start carrot
@@ -401,10 +391,8 @@ var GameLayer = cc.LayerColor.extend({
 
             // player
             this.player.setPosition(new cc.Point(screenWidth / 2, screenHeight / 2));
+            this.player.reset();
             this.player.start();
-            this.player.jump();
-            this.player.score = 0;
-            this.player.life = Player.lIFE;
 
             // set label
             this.updateLabel();
@@ -413,9 +401,6 @@ var GameLayer = cc.LayerColor.extend({
             this.heart.randomPos();
             //carrot
             this.carrot.randomPos();
-
-            // exp
-            this.player.exp = Player.START_EXP;
 
             // timer
             this.time = 0;
@@ -459,7 +444,7 @@ var GameLayer = cc.LayerColor.extend({
         cc.audioEngine.setMusicVolume(0);
         cc.audioEngine.setEffectsVolume(0);
 
-        if (confirm("Do you want to play again (lv. " + this.convertLV() + ") !?")) {
+        if (confirm("Do you want to play again at lv 1 (current lv. " + this.player.lv + ") !?")) {
             // un mute the music sound
             if (this.sound) {
                 cc.audioEngine.setMusicVolume(1);
