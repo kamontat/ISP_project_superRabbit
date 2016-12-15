@@ -1,3 +1,4 @@
 .idea/
+frameworks/
 
-superRabbit.iml
+*.iml
