@@ -1,6 +1,6 @@
 /**
  * @author "Soraya Saenna"
- * @version 1.5.0
+ * @version 1.7.0
  */
 var GameLayer = cc.LayerColor.extend({
     init: function () {
@@ -272,9 +272,13 @@ var GameLayer = cc.LayerColor.extend({
             console.info("state: End");
         }
         // game info
-        console.info(this.sound ? "Music: ON" : "Music: OFF");
+      console.info(this.sound ? "Music: ON" : "Music: OFF");
         // check player started
         console.info("Start Player: " + this.player.started);
+        console.info("Score: " + this.player.score);
+        console.info("Life: " + this.player.life);
+        console.info("Lv: " + this.player.lv);
+        console.info("Exp: " + this.player.exp + "/" + this.player.getMaxExp());
         // check obstacle started
         this.obstacles.forEach(function (obstacle) {
             console.info("Start Obstacle: " + obstacle.started);
